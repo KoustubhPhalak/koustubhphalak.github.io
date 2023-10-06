@@ -17,13 +17,11 @@ Optimized static QROM to read stored classical integer data.
 <br>
 <img src="/images/optimized_qrom.png" alt="Opt_QROM" width="400" style="border: 1px solid black;"/>
 
-
 Shot Optimization
 -----
 Reducing number of shots used in QML algorithms for cost-effective and time-effective training of QML circuits.
 <br>
 <img src="/images/shot_opt.png" alt="Shot_Opt" width="400" style="border: 1px solid black;"/>
-<!-- {% include base_path %}
 
 Quantum PUF
 -----
@@ -31,8 +29,4 @@ Quantum hardware identification protocol via cloud service, using special quantu
 <br>
 <img src="/images/quantum_puf.png" alt="Quantum_PUF" width="400" style="border: 1px solid black;"/>
 
-
-<!-- {% for post in site.projects %}
-  {% include archive-single.html %}
-{% endfor %} -->
 
