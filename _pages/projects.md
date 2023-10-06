@@ -6,9 +6,9 @@ author_profile: true
 ---
 
 Quantum Random Access Memory
-=====
+===
 Trainable PQC-based QRAM to load and store classical data into quantum Hilbert space.
-![Image here](/images/qram_pqc.png)
+![Image here](/images/qram_pqc.png){width="100px"}
 
 Quantum Read-Only Memory
 =====
