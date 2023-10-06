@@ -7,7 +7,7 @@ author_profile: true
 
 1\. Yoga and Meditation
 -----
-Since 2016, I have been practicing Yoga and Meditation techniques for 7 years. First, I learned the basic course Youth Empowerment Skills Plus (YES+) followed by the advanced course Silent Retreat, both conducted by the Art of Living Foundation. I am grateful for their teachings, for Sudarshan Kriya (a powerful guided meditation technique) has always tide the ups and downs of life 😄
+Since 2016, I have been practicing Yoga and Meditation techniques for 7 years. First, I learned the basic course Youth Empowerment Skills Plus (YES+) followed by the advanced course Silent Retreat, both conducted by the Art of Living Foundation. I am grateful for their teachings, for Sudarshan Kriya (a powerful guided meditation technique) has always helped me tide the ups and downs of life 😄
 <br>
 <img src="/images/art_of_living.png" alt="Meditation" width="400" style="border: 1px solid black;"/>
 
