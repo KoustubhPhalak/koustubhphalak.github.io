@@ -26,11 +26,11 @@ Reducing number of shots used in QML algorithms for cost-effective and time-effe
 
 Quantum PUF
 -----
-Quantum hardware identification protocol via cloud service, using noise characteristics as signature.
+Quantum hardware identification protocol via cloud service, using special quantum circuits as challenge noise characteristics as response.
 <img src="/images/quantum_puf.png" alt="Quantum_PUF" width="400"/>
 
 
 <!-- {% for post in site.projects %}
   {% include archive-single.html %}
-{% endfor %} --> -->
+{% endfor %} -->
 
