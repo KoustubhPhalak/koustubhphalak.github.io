@@ -9,8 +9,8 @@ main:
   - title: "Miscellaneous"
     url: /misc/    
     
-  - title: "Portfolio"
-    url: /portfolio/
+  # - title: "Portfolio"
+  #   url: /portfolio/
         
   # - title: "Blog Posts"
   #   url: /year-archive/
