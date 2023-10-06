@@ -184,7 +184,7 @@ collections:
   projects:
     output: true
     permalink: /:collection/:path/
-  talks:
+  miscellaneous:
     output: true
     permalink: /:collection/:path/
 
@@ -236,12 +236,12 @@ defaults:
       author_profile: true
       share: true
       comment: true
-  # _talks
+  # _miscellaneous
   - scope:
       path: ""
-      type: talks
+      type: miscellaneous
     values:
-      layout: talk
+      layout: single
       author_profile: true
       share: true
 
