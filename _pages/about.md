@@ -8,13 +8,14 @@ redirect_from:
   - /about.html
 ---
 
-
+PhD at Penn State
+-----
 My name is Koustubh Phalak, and I am a fourth year PhD student at Pennsylvania State University in the Computer Science & Engineering (CSE) Department. I started my PhD in 2020, and it started with a rather interesting experience. My first year was completely remote from India, owing to the Covid-19 pandemic, and I came here at Penn State in my second year. Since then, I have been working as usual (sometimes wearing masks and gloves, sometimes working from home 😉). My area of research is Quantum Computing, and I have worked on sub-domains such as quantum security, quantum machine learning, quantum chemistry, and drug discovery. For more details, you can have a look at my Publications page! 😄
 
 My research advisor is Dr. Swaroop Ghosh ([Personal Page](https://www.eecs.psu.edu/departments/directory-detail-g.aspx?q=szg212)). He is one of the most hardworking people I have ever met, which in turn motivates me to work harder and give my best! 😊
 
-Undergraduate
-=====
+Undergraduate at BITS Pilani
+-----
 I did my undergraduate studies in Electrical & Electronics Engineering (EEE) from Birla Institute of Technology and Science (BITS) Pilani, Hyderabad Campus. It started from August 2016 to June 2020. Overall, it was a wonderful experience any undergrad should have and enjoy! After that, I immediately started my PhD work. 
 
 <!-- This is the front page of a website that is powered by the [academicpages template](https://github.com/academicpages/academicpages.github.io) and hosted on GitHub pages. [GitHub pages](https://pages.github.com) is a free service in which websites are built and hosted from code and data stored in a GitHub repository, automatically updating when a new commit is made to the respository. This template was forked from the [Minimal Mistakes Jekyll Theme](https://mmistakes.github.io/minimal-mistakes/) created by Michael Rose, and then extended to support the kinds of content that academics have: publications, talks, teaching, a portfolio, blog posts, and a dynamically-generated CV. You can fork [this repository](https://github.com/academicpages/academicpages.github.io) right now, modify the configuration and markdown files, add your own PDFs and other content, and have your own site for free, with no ads! An older version of this template powers my own personal website at [stuartgeiger.com](http://stuartgeiger.com), which uses [this Github repository](https://github.com/staeiou/staeiou.github.io).
