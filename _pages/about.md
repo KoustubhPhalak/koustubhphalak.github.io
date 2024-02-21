@@ -7,6 +7,9 @@ redirect_from:
   - /about/
   - /about.html
 ---
+<head>
+    <link rel="shortcut icon" type="image/x-icon" href=href="{{ "/images/favicon.ico" | absolute_url }}">
+</head>
 
 PhD at Penn State
 -----
