@@ -5,6 +5,25 @@ permalink: /projects/
 author_profile: true
 ---
 
+Searching for optimal quantum embedding using Genetic Algorithm
+-----
+In contrast to performing optimization algorithms on state preparation circuits, we use Genetic Algorithm to perform search for optimal quantum embedding.
+<br>
+<img src="/images/quantum_embed_genetic.png" alt="Genetic Search" width="400" style="border: 1px solid black;"/>
+
+Quantum H/W selection using QuaLITi
+-----
+Performing hardware configurational analysis using various factors such as qubit coherence times, gate and readout errors, post-transpilation circuit depth to selecting optimal hardware for inferencing QML workloads.
+<br>
+<img src="/images/Qualiti_overview.png" alt="QuaLITi methodology" width="700" style="border: 1px solid black;"/>
+
+Greedy Parametric Quantum Circuit (PQC) Optimization
+-----
+A novel greedy algorithm to convert parametric gates in a PQC into equivalent set of non-parametric gates for lower post-transpilation gate count and circuit depth in QML workloads.
+<br>
+<img src="/images/parametric_gate_conversion.png" alt="Gate_Angle_Var" width="600" style="border: 1px solid black;"/>
+<img src="/images/PQC_optimization_greedy.png" alt="Greedy_PQC_Eg" width="500" style="border: 1px solid black;"/>
+
 Quantum Random Access Memory
 -----
 Trainable PQC-based QRAM to load and store classical data into quantum Hilbert space.
