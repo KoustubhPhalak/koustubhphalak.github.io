@@ -20,48 +20,82 @@
   </div>
   
   <script>
-  window.addEventListener('load', function() {
-    console.log('Page loaded, fetching Scholar data...');
-    
-    var scholarId = '{{ include.scholar_id }}';
-    console.log('Scholar ID: ' + scholarId);
-    
-    var url = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://scholar.google.com/citations?user=' + scholarId + '&hl=en');
-    
-    fetch(url)
-      .then(function(response) {
-        return response.json();
-      })
-      .then(function(data) {
-        console.log('Data received');
-        
-        var parser = new DOMParser();
-        var doc = parser.parseFromString(data.contents, 'text/html');
-        
-        var stats = doc.querySelectorAll('.gsc_rsb_std');
-        console.log('Found ' + stats.length + ' stat elements');
-        
-        if (stats.length >= 3) {
-          document.getElementById('citations').textContent = stats[0].textContent;
-          document.getElementById('h-index').textContent = stats[2].textContent;
-          if (stats[4]) {
-            document.getElementById('i10-index').textContent = stats[4].textContent;
-          }
-        } else {
-          console.log('Not enough stats found');
-          document.getElementById('citations').textContent = 'N/A';
-          document.getElementById('h-index').textContent = 'N/A';
-          document.getElementById('i10-index').textContent = 'N/A';
+    window.addEventListener('load', function() {
+      console.log('Page loaded, fetching Scholar data...');
+      
+      var scholarId = '{{ include.scholar_id }}';
+      console.log('Scholar ID: ' + scholarId);
+      
+      var proxies = [
+        'https://cors-anywhere.herokuapp.com/',
+        'https://api.codetabs.com/v1/proxy?quest=',
+        'https://thingproxy.freeboard.io/fetch/',
+        'https://cors-proxy.htmldriven.com/?url='
+      ];
+      
+      var targetUrl = 'https://scholar.google.com/citations?user=' + scholarId + '&hl=en';
+      var currentProxy = 0;
+      
+      function tryNextProxy() {
+        if (currentProxy >= proxies.length) {
+          console.log('All proxies failed');
+          showError();
+          return;
         }
-      })
-      .catch(function(error) {
-        console.error('Error:', error);
+        
+        var proxyUrl = proxies[currentProxy] + encodeURIComponent(targetUrl);
+        console.log('Trying proxy ' + (currentProxy + 1) + ': ' + proxies[currentProxy]);
+        
+        fetch(proxyUrl)
+          .then(function(response) {
+            if (!response.ok) {
+              throw new Error('Response not ok');
+            }
+            return response.text();
+          })
+          .then(function(html) {
+            console.log('Data received from proxy ' + (currentProxy + 1));
+            parseData(html);
+          })
+          .catch(function(error) {
+            console.log('Proxy ' + (currentProxy + 1) + ' failed:', error);
+            currentProxy++;
+            tryNextProxy();
+          });
+      }
+      
+      function parseData(html) {
+        try {
+          var parser = new DOMParser();
+          var doc = parser.parseFromString(html, 'text/html');
+          
+          var stats = doc.querySelectorAll('.gsc_rsb_std');
+          console.log('Found ' + stats.length + ' stat elements');
+          
+          if (stats.length >= 3) {
+            document.getElementById('citations').textContent = stats[0].textContent;
+            document.getElementById('h-index').textContent = stats[2].textContent;
+            if (stats[4]) {
+              document.getElementById('i10-index').textContent = stats[4].textContent;
+            }
+          } else {
+            showError();
+          }
+        } catch (error) {
+          console.error('Parse error:', error);
+          showError();
+        }
+      }
+      
+      function showError() {
         document.getElementById('citations').textContent = 'Error';
         document.getElementById('h-index').textContent = 'Error';
         document.getElementById('i10-index').textContent = 'Error';
-      });
-  });
-  </script>
+      }
+      
+      tryNextProxy();
+    });
+    </script>
   
   <style>
   .scholar-widget {
