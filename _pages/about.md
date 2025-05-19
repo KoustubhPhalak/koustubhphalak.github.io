@@ -11,6 +11,8 @@ redirect_from:
     <link rel="shortcut icon" type="image/x-icon" href="{{ "/images/favicon.ico" | absolute_url }}">
 </head>
 
+Research Statistics
+-----
 {% include google-scholar-widget.html scholar_id="B36kyxIAAAAJ" %}
 
 PhD at Penn State
