@@ -1,0 +1,158 @@
+<div class="google-scholar-widget" id="scholar-widget-{{ include.scholar_id }}">
+    <h3>📚 {{ include.title | default: "Google Scholar Profile" }}</h3>
+    <div class="scholar-stats">
+      <div class="stat">
+        <span class="number scholar-citations">Loading...</span>
+        <span class="label">Citations</span>
+      </div>
+      <div class="stat">
+        <span class="number scholar-h-index">Loading...</span>
+        <span class="label">h-index</span>
+      </div>
+      <div class="stat">
+        <span class="number scholar-i10-index">Loading...</span>
+        <span class="label">i10-index</span>
+      </div>
+    </div>
+    <a href="https://scholar.google.com/citations?user={{ include.scholar_id }}" 
+       target="_blank" class="scholar-link">
+      View Full Profile →
+    </a>
+    <p class="last-updated">
+      <small>Last updated: <span class="update-time">Loading...</span></small>
+    </p>
+  </div>
+  
+  <script>
+  (function() {
+    const scholarId = '{{ include.scholar_id }}';
+    const widgetId = 'scholar-widget-' + scholarId;
+    const widget = document.getElementById(widgetId);
+    
+    async function fetchScholarData() {
+      try {
+        const proxyUrl = 'https://api.allorigins.win/get?url=';
+        const targetUrl = `https://scholar.google.com/citations?user=${scholarId}&hl=en`;
+        
+        const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
+        const data = await response.json();
+        
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data.contents, 'text/html');
+        
+        // Method 1: Try table approach
+        const statsTable = doc.querySelector('#gsc_rsb_st');
+        if (statsTable) {
+          const rows = statsTable.querySelectorAll('tr');
+          if (rows.length >= 4) {
+            const citations = rows[1].querySelector('td:nth-child(2)')?.textContent?.trim() || 'N/A';
+            const hIndex = rows[2].querySelector('td:nth-child(2)')?.textContent?.trim() || 'N/A';
+            const i10Index = rows[3].querySelector('td:nth-child(2)')?.textContent?.trim() || 'N/A';
+            
+            widget.querySelector('.scholar-citations').textContent = citations;
+            widget.querySelector('.scholar-h-index').textContent = hIndex;
+            widget.querySelector('.scholar-i10-index').textContent = i10Index;
+            widget.querySelector('.update-time').textContent = new Date().toLocaleDateString();
+            return;
+          }
+        }
+        
+        // Method 2: Try alternative selectors
+        const statsElements = doc.querySelectorAll('.gsc_rsb_std');
+        if (statsElements.length >= 5) {
+          widget.querySelector('.scholar-citations').textContent = statsElements[0].textContent || 'N/A';
+          widget.querySelector('.scholar-h-index').textContent = statsElements[2].textContent || 'N/A';
+          widget.querySelector('.scholar-i10-index').textContent = statsElements[4].textContent || 'N/A';
+          widget.querySelector('.update-time').textContent = new Date().toLocaleDateString();
+        } else {
+          throw new Error('Could not parse citation data');
+        }
+        
+      } catch (error) {
+        console.error('Error fetching Scholar data:', error);
+        widget.querySelector('.scholar-citations').textContent = 'Error';
+        widget.querySelector('.scholar-h-index').textContent = 'Error';
+        widget.querySelector('.scholar-i10-index').textContent = 'Error';
+        widget.querySelector('.update-time').textContent = 'Failed to update';
+      }
+    }
+    
+    // Fetch data when page loads
+    fetchScholarData();
+  })();
+  </script>
+  
+  <style>
+  .google-scholar-widget {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .google-scholar-widget h3 {
+    margin-top: 0;
+    color: #333;
+    text-align: center;
+  }
+  
+  .scholar-stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+    gap: 10px;
+  }
+  
+  .stat {
+    text-align: center;
+    flex: 1;
+  }
+  
+  .number {
+    display: block;
+    font-size: 28px;
+    font-weight: bold;
+    color: #4285f4;
+    margin-bottom: 5px;
+  }
+  
+  .label {
+    font-size: 14px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .scholar-link {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #4285f4;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s;
+  }
+  
+  .scholar-link:hover {
+    background: #3367d6;
+    color: white;
+  }
+  
+  .last-updated {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 0;
+    color: #888;
+  }
+  
+  @media (max-width: 600px) {
+    .scholar-stats {
+      flex-direction: column;
+      gap: 15px;
+    }
+  }
+  </style>

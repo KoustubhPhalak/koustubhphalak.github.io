@@ -11,6 +11,8 @@ redirect_from:
     <link rel="shortcut icon" type="image/x-icon" href="{{ "/images/favicon.ico" | absolute_url }}">
 </head>
 
+{% include simple-scholar.html scholar_id="B36kyxIAAAAJ" %}
+
 PhD at Penn State
 -----
 My name is Koustubh Phalak, and I am a fifth year PhD student at Pennsylvania State University in the Computer Science & Engineering (CSE) Department. I started my PhD in 2020, and it started with a rather interesting experience. My first year was completely remote from India, owing to the Covid-19 pandemic, and I came here at Penn State in my second year. Since then, I have been working as usual. My area of research is Quantum Computing, and I have worked on sub-domains such as quantum security, quantum machine learning, quantum chemistry, and drug discovery. For more details, you can have a look at my Publications page! 😄
