@@ -24,63 +24,120 @@
   </div>
   
   <script>
-  (function() {
-    const scholarId = '{{ include.scholar_id }}';
-    const widgetId = 'scholar-widget-' + scholarId;
-    const widget = document.getElementById(widgetId);
-    
-    async function fetchScholarData() {
-      try {
-        const proxyUrl = 'https://api.allorigins.win/get?url=';
+    (function() {
+      // Replace with your actual Scholar ID
+      const scholarId = 'YOUR_ACTUAL_SCHOLAR_ID'; 
+      
+      console.log('Attempting to fetch Scholar data for ID:', scholarId);
+      
+      async function fetchScholarData() {
+        // Try multiple CORS proxies
+        const proxies = [
+          'https://api.allorigins.win/get?url=',
+          'https://cors-anywhere.herokuapp.com/',
+          'https://api.codetabs.com/v1/proxy?quest=',
+          'https://thingproxy.freeboard.io/fetch/'
+        ];
+        
         const targetUrl = `https://scholar.google.com/citations?user=${scholarId}&hl=en`;
         
-        const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
-        const data = await response.json();
-        
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(data.contents, 'text/html');
-        
-        // Method 1: Try table approach
-        const statsTable = doc.querySelector('#gsc_rsb_st');
-        if (statsTable) {
-          const rows = statsTable.querySelectorAll('tr');
-          if (rows.length >= 4) {
-            const citations = rows[1].querySelector('td:nth-child(2)')?.textContent?.trim() || 'N/A';
-            const hIndex = rows[2].querySelector('td:nth-child(2)')?.textContent?.trim() || 'N/A';
-            const i10Index = rows[3].querySelector('td:nth-child(2)')?.textContent?.trim() || 'N/A';
+        for (let i = 0; i < proxies.length; i++) {
+          try {
+            console.log(`Trying proxy ${i + 1}:`, proxies[i]);
             
-            widget.querySelector('.scholar-citations').textContent = citations;
-            widget.querySelector('.scholar-h-index').textContent = hIndex;
-            widget.querySelector('.scholar-i10-index').textContent = i10Index;
-            widget.querySelector('.update-time').textContent = new Date().toLocaleDateString();
-            return;
+            let response;
+            if (i === 0) {
+              // allorigins format
+              response = await fetch(proxies[i] + encodeURIComponent(targetUrl));
+              const data = await response.json();
+              parseScholarData(data.contents);
+              return; // Success, exit
+            } else {
+              // Direct proxy format
+              response = await fetch(proxies[i] + targetUrl);
+              const html = await response.text();
+              parseScholarData(html);
+              return; // Success, exit
+            }
+          } catch (error) {
+            console.error(`Proxy ${i + 1} failed:`, error);
           }
         }
         
-        // Method 2: Try alternative selectors
-        const statsElements = doc.querySelectorAll('.gsc_rsb_std');
-        if (statsElements.length >= 5) {
-          widget.querySelector('.scholar-citations').textContent = statsElements[0].textContent || 'N/A';
-          widget.querySelector('.scholar-h-index').textContent = statsElements[2].textContent || 'N/A';
-          widget.querySelector('.scholar-i10-index').textContent = statsElements[4].textContent || 'N/A';
-          widget.querySelector('.update-time').textContent = new Date().toLocaleDateString();
-        } else {
-          throw new Error('Could not parse citation data');
-        }
-        
-      } catch (error) {
-        console.error('Error fetching Scholar data:', error);
-        widget.querySelector('.scholar-citations').textContent = 'Error';
-        widget.querySelector('.scholar-h-index').textContent = 'Error';
-        widget.querySelector('.scholar-i10-index').textContent = 'Error';
-        widget.querySelector('.update-time').textContent = 'Failed to update';
+        // If all proxies fail, show error
+        showError();
       }
-    }
-    
-    // Fetch data when page loads
-    fetchScholarData();
-  })();
-  </script>
+      
+      function parseScholarData(html) {
+        try {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          
+          console.log('Parsing Scholar data...');
+          
+          // Method 1: Try the statistics table
+          const statsTable = doc.querySelector('#gsc_rsb_st');
+          if (statsTable) {
+            const rows = statsTable.querySelectorAll('tr');
+            if (rows.length >= 4) {
+              const citations = rows[1].querySelector('td:nth-child(2)')?.textContent?.trim();
+              const hIndex = rows[2].querySelector('td:nth-child(2)')?.textContent?.trim();
+              const i10Index = rows[3].querySelector('td:nth-child(2)')?.textContent?.trim();
+              
+              if (citations && hIndex && i10Index) {
+                updateWidget(citations, hIndex, i10Index);
+                return;
+              }
+            }
+          }
+          
+          // Method 2: Try alternative selectors
+          const statsElements = doc.querySelectorAll('.gsc_rsb_std');
+          if (statsElements.length >= 5) {
+            updateWidget(
+              statsElements[0].textContent.trim(),
+              statsElements[2].textContent.trim(),
+              statsElements[4].textContent.trim()
+            );
+            return;
+          }
+          
+          throw new Error('Could not find citation data in page');
+          
+        } catch (error) {
+          console.error('Error parsing Scholar data:', error);
+          showError();
+        }
+      }
+      
+      function updateWidget(citations, hIndex, i10Index) {
+        console.log('Updating widget with:', {citations, hIndex, i10Index});
+        
+        document.querySelector('.scholar-citations').textContent = citations;
+        document.querySelector('.scholar-h-index').textContent = hIndex;
+        document.querySelector('.scholar-i10-index').textContent = i10Index;
+        document.querySelector('.update-time').textContent = new Date().toLocaleDateString();
+      }
+      
+      function showError() {
+        document.querySelector('.scholar-citations').textContent = 'Error';
+        document.querySelector('.scholar-h-index').textContent = 'Error';
+        document.querySelector('.scholar-i10-index').textContent = 'Error';
+        document.querySelector('.update-time').textContent = 'Failed to load';
+      }
+      
+      // Add timeout to prevent infinite loading
+      setTimeout(() => {
+        if (document.querySelector('.scholar-citations').textContent === 'Loading...') {
+          console.log('Timeout reached, showing error');
+          showError();
+        }
+      }, 15000); // 15 second timeout
+      
+      // Start fetching when page loads
+      fetchScholarData();
+    })();
+    </script>
   
   <style>
   .google-scholar-widget {
