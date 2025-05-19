@@ -17,85 +17,79 @@
     <a href="https://scholar.google.com/citations?user={{ include.scholar_id }}" target="_blank">
       View Full Profile →
     </a>
+    <p id="last-updated" style="text-align: center; font-size: 12px; color: #888; margin-top: 10px;">
+      Loading...
+    </p>
   </div>
   
   <script>
-    window.addEventListener('load', function() {
-      console.log('Page loaded, fetching Scholar data...');
+  function loadScholarData() {
+    var scholarId = '{{ include.scholar_id }}';
+    var cacheKey = 'scholar_' + scholarId;
+    var now = Date.now();
+    var oneDay = 86400000;
+    
+    var cached = localStorage.getItem(cacheKey);
+    
+    if (cached) {
+      var data = JSON.parse(cached);
+      var age = now - data.time;
       
-      var scholarId = '{{ include.scholar_id }}';
-      console.log('Scholar ID: ' + scholarId);
-      
-      var proxies = [
-        'https://api.codetabs.com/v1/proxy?quest=',
-        'https://cors-anywhere.herokuapp.com/',
-        'https://thingproxy.freeboard.io/fetch/',
-        'https://cors-proxy.htmldriven.com/?url='
-      ];
-      
-      var targetUrl = 'https://scholar.google.com/citations?user=' + scholarId + '&hl=en';
-      var currentProxy = 0;
-      
-      function tryNextProxy() {
-        if (currentProxy >= proxies.length) {
-          console.log('All proxies failed');
-          showError();
-          return;
-        }
+      if (age < oneDay) {
+        document.getElementById('citations').textContent = data.citations;
+        document.getElementById('h-index').textContent = data.hIndex;
+        document.getElementById('i10-index').textContent = data.i10Index;
+        document.getElementById('last-updated').textContent = 'Cached: ' + new Date(data.time).toLocaleDateString();
+        return;
+      }
+    }
+    
+    var url = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent('https://scholar.google.com/citations?user=' + scholarId + '&hl=en');
+    
+    fetch(url)
+      .then(function(r) { return r.text(); })
+      .then(function(html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var stats = doc.querySelectorAll('.gsc_rsb_std');
         
-        var proxyUrl = proxies[currentProxy] + encodeURIComponent(targetUrl);
-        console.log('Trying proxy ' + (currentProxy + 1) + ': ' + proxies[currentProxy]);
-        
-        fetch(proxyUrl)
-          .then(function(response) {
-            if (!response.ok) {
-              throw new Error('Response not ok');
-            }
-            return response.text();
-          })
-          .then(function(html) {
-            console.log('Data received from proxy ' + (currentProxy + 1));
-            parseData(html);
-          })
-          .catch(function(error) {
-            console.log('Proxy ' + (currentProxy + 1) + ' failed:', error);
-            currentProxy++;
-            tryNextProxy();
-          });
-      }
-      
-      function parseData(html) {
-        try {
-          var parser = new DOMParser();
-          var doc = parser.parseFromString(html, 'text/html');
+        if (stats.length >= 3) {
+          var citations = stats[0].textContent.trim();
+          var hIndex = stats[2].textContent.trim();
+          var i10Index = stats[4] ? stats[4].textContent.trim() : 'N/A';
           
-          var stats = doc.querySelectorAll('.gsc_rsb_std');
-          console.log('Found ' + stats.length + ' stat elements');
+          document.getElementById('citations').textContent = citations;
+          document.getElementById('h-index').textContent = hIndex;
+          document.getElementById('i10-index').textContent = i10Index;
+          document.getElementById('last-updated').textContent = 'Fresh: ' + new Date().toLocaleDateString();
           
-          if (stats.length >= 3) {
-            document.getElementById('citations').textContent = stats[0].textContent;
-            document.getElementById('h-index').textContent = stats[2].textContent;
-            if (stats[4]) {
-              document.getElementById('i10-index').textContent = stats[4].textContent;
-            }
-          } else {
-            showError();
-          }
-        } catch (error) {
-          console.error('Parse error:', error);
-          showError();
+          localStorage.setItem(cacheKey, JSON.stringify({
+            citations: citations,
+            hIndex: hIndex,
+            i10Index: i10Index,
+            time: now
+          }));
+        } else {
+          throw new Error('No stats found');
         }
-      }
-      
-      function showError() {
-        document.getElementById('citations').textContent = 'Error';
-        document.getElementById('h-index').textContent = 'Error';
-        document.getElementById('i10-index').textContent = 'Error';
-      }
-      
-      tryNextProxy();
-    });
-    </script>
+      })
+      .catch(function() {
+        if (cached) {
+          var data = JSON.parse(cached);
+          document.getElementById('citations').textContent = data.citations;
+          document.getElementById('h-index').textContent = data.hIndex;
+          document.getElementById('i10-index').textContent = data.i10Index;
+          document.getElementById('last-updated').textContent = 'Old cache: ' + new Date(data.time).toLocaleDateString();
+        } else {
+          document.getElementById('citations').textContent = 'Error';
+          document.getElementById('h-index').textContent = 'Error';
+          document.getElementById('i10-index').textContent = 'Error';
+          document.getElementById('last-updated').textContent = 'Failed to load';
+        }
+      });
+  }
+  
+  window.addEventListener('load', loadScholarData);
+  </script>
   
   <style>
   .scholar-widget {
