@@ -1,0 +1,56 @@
+<div id="google-scholar-widget" class="google-scholar-box">
+    <h3><i class="fas fa-graduation-cap"></i> Google Scholar Metrics</h3>
+    <div id="scholar-stats">
+      <div class="stat-item">
+        <span class="stat-value" id="total-citations">Loading...</span>
+        <span class="stat-label">Total Citations</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="h-index">Loading...</span>
+        <span class="stat-label">h-index</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="i10-index">Loading...</span>
+        <span class="stat-label">i10-index</span>
+      </div>
+    </div>
+    <p class="scholar-link">
+      <a href="https://scholar.google.com/citations?user=YOUR_SCHOLAR_ID" target="_blank">
+        View Full Profile <i class="fas fa-external-link-alt"></i>
+      </a>
+    </p>
+  </div>
+  
+  <script>
+  async function fetchGoogleScholarStats() {
+    const scholarId = 'B36kyxIAAAAJ'; // Replace with your actual Scholar ID
+    const proxyUrl = 'https://api.allorigins.win/get?url=';
+    const targetUrl = `https://scholar.google.com/citations?user=${scholarId}&hl=en`;
+    
+    try {
+      const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
+      const data = await response.json();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(data.contents, 'text/html');
+      
+      // Extract citation metrics
+      const statsElements = doc.querySelectorAll('#gsc_rsb_st .gsc_rsb_std');
+      
+      if (statsElements.length >= 3) {
+        document.getElementById('total-citations').textContent = statsElements[0].textContent || 'N/A';
+        document.getElementById('h-index').textContent = statsElements[2].textContent || 'N/A';
+        document.getElementById('i10-index').textContent = statsElements[4] ? statsElements[4].textContent : 'N/A';
+      } else {
+        throw new Error('Could not parse citation data');
+      }
+    } catch (error) {
+      console.error('Error fetching Google Scholar data:', error);
+      document.getElementById('total-citations').textContent = 'Error';
+      document.getElementById('h-index').textContent = 'Error';
+      document.getElementById('i10-index').textContent = 'Error';
+    }
+  }
+  
+  // Load stats when page loads
+  document.addEventListener('DOMContentLoaded', fetchGoogleScholarStats);
+  </script>
