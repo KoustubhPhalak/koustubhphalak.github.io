@@ -1,230 +1,117 @@
-<div class="google-scholar-widget" id="scholar-widget-{{ include.scholar_id }}">
-    <h3>📚 {{ include.title | default: "Google Scholar Profile" }}</h3>
+<div class="scholar-widget">
+    <h3>📚 Google Scholar Profile</h3>
     <div class="scholar-stats">
       <div class="stat">
-        <span class="number scholar-citations">Loading...</span>
+        <span class="number" id="citations">Loading...</span>
         <span class="label">Citations</span>
       </div>
       <div class="stat">
-        <span class="number scholar-h-index">Loading...</span>
+        <span class="number" id="h-index">Loading...</span>
         <span class="label">h-index</span>
       </div>
       <div class="stat">
-        <span class="number scholar-i10-index">Loading...</span>
+        <span class="number" id="i10-index">Loading...</span>
         <span class="label">i10-index</span>
       </div>
     </div>
-    <a href="https://scholar.google.com/citations?user={{ include.scholar_id }}" 
-       target="_blank" class="scholar-link">
+    <a href="https://scholar.google.com/citations?user={{ include.scholar_id }}" target="_blank">
       View Full Profile →
     </a>
-    <p class="last-updated">
-      <small>Last updated: <span class="update-time">Loading...</span></small>
-    </p>
   </div>
   
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded, starting Scholar fetch...');
+  window.addEventListener('load', function() {
+    console.log('Page loaded, fetching Scholar data...');
     
-    const scholarId = '{{ include.scholar_id }}';
-    const widgetId = 'scholar-widget-{{ include.scholar_id }}';
-    const widget = document.getElementById(widgetId);
+    var scholarId = '{{ include.scholar_id }}';
+    console.log('Scholar ID: ' + scholarId);
     
-    console.log('Scholar ID:', scholarId);
-    console.log('Widget element:', widget);
+    var url = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://scholar.google.com/citations?user=' + scholarId + '&hl=en');
     
-    if (!widget) {
-      console.error('Widget element not found with ID:', widgetId);
-      return;
-    }
-    
-    async function fetchScholarData() {
-      try {
-        console.log('Fetching data for Scholar ID:', scholarId);
+    fetch(url)
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data) {
+        console.log('Data received');
         
-        const proxyUrl = 'https://api.allorigins.win/get?url=';
-        const targetUrl = `https://scholar.google.com/citations?user=${scholarId}&hl=en`;
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(data.contents, 'text/html');
         
-        console.log('Target URL:', targetUrl);
+        var stats = doc.querySelectorAll('.gsc_rsb_std');
+        console.log('Found ' + stats.length + ' stat elements');
         
-        const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
-        console.log('Response status:', response.status);
-        
-        const data = await response.json();
-        console.log('Response data keys:', Object.keys(data));
-        
-        if (!data.contents) {
-          throw new Error('No contents in response');
-        }
-        
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(data.contents, 'text/html');
-        
-        console.log('Parsed document');
-        
-        // Method 1: Try the statistics table
-        const statsTable = doc.querySelector('#gsc_rsb_st');
-        console.log('Stats table found:', !!statsTable);
-        
-        if (statsTable) {
-          const rows = statsTable.querySelectorAll('tr');
-          console.log('Table rows found:', rows.length);
-          
-          if (rows.length >= 4) {
-            const citationsCell = rows[1].querySelector('td:nth-child(2)');
-            const hIndexCell = rows[2].querySelector('td:nth-child(2)');
-            const i10IndexCell = rows[3].querySelector('td:nth-child(2)');
-            
-            if (citationsCell && hIndexCell && i10IndexCell) {
-              const citations = citationsCell.textContent.trim();
-              const hIndex = hIndexCell.textContent.trim();
-              const i10Index = i10IndexCell.textContent.trim();
-              
-              console.log('Extracted data:', {citations, hIndex, i10Index});
-              updateWidget(citations, hIndex, i10Index);
-              return;
-            }
+        if (stats.length >= 3) {
+          document.getElementById('citations').textContent = stats[0].textContent;
+          document.getElementById('h-index').textContent = stats[2].textContent;
+          if (stats[4]) {
+            document.getElementById('i10-index').textContent = stats[4].textContent;
           }
+        } else {
+          console.log('Not enough stats found');
+          document.getElementById('citations').textContent = 'N/A';
+          document.getElementById('h-index').textContent = 'N/A';
+          document.getElementById('i10-index').textContent = 'N/A';
         }
-        
-        // Method 2: Try alternative selectors
-        const statsElements = doc.querySelectorAll('.gsc_rsb_std');
-        console.log('Stats elements found:', statsElements.length);
-        
-        if (statsElements.length >= 5) {
-          const citations = statsElements[0].textContent.trim();
-          const hIndex = statsElements[2].textContent.trim();
-          const i10Index = statsElements[4].textContent.trim();
-          
-          console.log('Alternative extraction:', {citations, hIndex, i10Index});
-          updateWidget(citations, hIndex, i10Index);
-          return;
-        }
-        
-        throw new Error('Could not find citation data in page');
-        
-      } catch (error) {
-        console.error('Error fetching Scholar data:', error);
-        showError();
-      }
-    }
-    
-    function updateWidget(citations, hIndex, i10Index) {
-      console.log('Updating widget with:', {citations, hIndex, i10Index});
-      
-      const citationsElement = widget.querySelector('.scholar-citations');
-      const hIndexElement = widget.querySelector('.scholar-h-index');
-      const i10IndexElement = widget.querySelector('.scholar-i10-index');
-      const updateTimeElement = widget.querySelector('.update-time');
-      
-      if (citationsElement) citationsElement.textContent = citations;
-      if (hIndexElement) hIndexElement.textContent = hIndex;
-      if (i10IndexElement) i10IndexElement.textContent = i10Index;
-      if (updateTimeElement) updateTimeElement.textContent = new Date().toLocaleDateString();
-      
-      console.log('Widget updated successfully');
-    }
-    
-    function showError() {
-      console.log('Showing error in widget');
-      
-      const citationsElement = widget.querySelector('.scholar-citations');
-      const hIndexElement = widget.querySelector('.scholar-h-index');
-      const i10IndexElement = widget.querySelector('.scholar-i10-index');
-      const updateTimeElement = widget.querySelector('.update-time');
-      
-      if (citationsElement) citationsElement.textContent = 'Error';
-      if (hIndexElement) hIndexElement.textContent = 'Error';
-      if (i10IndexElement) i10IndexElement.textContent = 'Error';
-      if (updateTimeElement) updateTimeElement.textContent = 'Failed to load';
-    }
-    
-    // Add timeout
-    setTimeout(() => {
-      const citationsElement = widget.querySelector('.scholar-citations');
-      if (citationsElement && citationsElement.textContent === 'Loading...') {
-        console.log('Timeout reached, showing error');
-        showError();
-      }
-    }, 15000);
-    
-    // Start fetching
-    fetchScholarData();
+      })
+      .catch(function(error) {
+        console.error('Error:', error);
+        document.getElementById('citations').textContent = 'Error';
+        document.getElementById('h-index').textContent = 'Error';
+        document.getElementById('i10-index').textContent = 'Error';
+      });
   });
   </script>
   
   <style>
-  .google-scholar-widget {
+  .scholar-widget {
+    background: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 20px;
     margin: 20px 0;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
   
-  .google-scholar-widget h3 {
+  .scholar-widget h3 {
     margin-top: 0;
-    color: #333;
     text-align: center;
+    color: #333;
   }
   
   .scholar-stats {
     display: flex;
     justify-content: space-around;
     margin: 20px 0;
-    gap: 10px;
   }
   
   .stat {
     text-align: center;
-    flex: 1;
   }
   
   .number {
     display: block;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
     color: #4285f4;
-    margin-bottom: 5px;
   }
   
   .label {
     font-size: 14px;
     color: #666;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
   }
   
-  .scholar-link {
+  .scholar-widget a {
     display: block;
     text-align: center;
     margin-top: 15px;
-    padding: 10px 20px;
+    padding: 10px;
     background: #4285f4;
     color: white;
     text-decoration: none;
     border-radius: 5px;
-    transition: background 0.3s;
   }
   
-  .scholar-link:hover {
+  .scholar-widget a:hover {
     background: #3367d6;
-    color: white;
-  }
-  
-  .last-updated {
-    text-align: center;
-    margin-top: 10px;
-    margin-bottom: 0;
-    color: #888;
-  }
-  
-  @media (max-width: 600px) {
-    .scholar-stats {
-      flex-direction: column;
-      gap: 15px;
-    }
   }
   </style>
