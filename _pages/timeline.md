@@ -47,7 +47,7 @@ author_profile: true
   position: absolute;
   width: 18px;
   height: 18px;
-  left: -48px; /* Adjusted for perfect centering */
+  left: -49px; /* Adjusted for perfect centering */
   background-color: white;
   border: 3px solid #3498db;
   top: 22px;
