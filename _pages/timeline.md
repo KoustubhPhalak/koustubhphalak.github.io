@@ -6,9 +6,9 @@ classes: wide
 ---
 
 <style>
-/* Reset for page container to respect sidebar */
+/* Page Reset for timeline layout */
 .page {
-  width: calc(100% - 300px) !important;
+  width: calc(100% - 250px) !important;
   float: right !important;
   margin-right: 0 !important;
   padding-right: 1em !important;
@@ -30,8 +30,8 @@ classes: wide
 /* Timeline container */
 .timeline {
   position: relative;
-  width: 90%;
-  max-width: 1000px;
+  width: 95%;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px 0;
 }
@@ -50,7 +50,7 @@ classes: wide
 
 /* Container for timeline items */
 .container {
-  padding: 10px 40px;
+  padding: 10px 50px;
   position: relative;
   background-color: inherit;
   width: 50%;
@@ -88,7 +88,7 @@ classes: wide
   top: 22px;
   width: 0;
   z-index: 1;
-  right: 30px;
+  right: 40px;
   border: medium solid #f2f2f2;
   border-width: 10px 0 10px 10px;
   border-color: transparent transparent transparent #f2f2f2;
@@ -102,7 +102,7 @@ classes: wide
   top: 22px;
   width: 0;
   z-index: 1;
-  left: 30px;
+  left: 40px;
   border: medium solid #f2f2f2;
   border-width: 10px 10px 10px 0;
   border-color: transparent #f2f2f2 transparent transparent;
