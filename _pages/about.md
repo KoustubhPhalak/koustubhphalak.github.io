@@ -11,6 +11,34 @@ redirect_from:
     <link rel="shortcut icon" type="image/x-icon" href="{{ "/images/favicon.ico" | absolute_url }}">
 </head>
 
+Research Interests
+-----
+<div class="research-interests">
+  <span class="research-area">Quantum Computing</span> • 
+  <span class="research-area">Machine Learning</span> • 
+  <span class="research-area">Generative AI</span>
+</div>
+
+<style>
+.research-interests {
+  font-size: 1.2em;
+  line-height: 1.6;
+  margin: 1em 0;
+  color: #333;
+}
+
+.research-area {
+  font-weight: 500;
+  color: #0066cc;
+  background: linear-gradient(to right, #f5f7fa, #ffffff);
+  padding: 4px 10px;
+  border-radius: 4px;
+  display: inline-block;
+  margin: 3px 0;
+  border-left: 3px solid #0066cc;
+}
+</style>
+
 Research Statistics
 -----
 {% include google-scholar-widget.html scholar_id="B36kyxIAAAAJ" %}
