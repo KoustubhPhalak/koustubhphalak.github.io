@@ -8,18 +8,18 @@ classes: wide
 <style>
 /* Page Reset for timeline layout */
 .page {
-  width: calc(100% - 250px) !important;
+  width: calc(100% - 200px) !important;
   float: right !important;
   margin-right: 0 !important;
-  padding-right: 1em !important;
-  padding-left: 1em !important;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
 }
 
 /* Make sure inner wrap takes full width */
 .page__inner-wrap {
   width: 100% !important;
   margin: 0 auto !important;
-  padding: 1em 0 !important;
+  padding: 0 !important;
 }
 
 .page__content {
@@ -30,8 +30,8 @@ classes: wide
 /* Timeline container */
 .timeline {
   position: relative;
-  width: 95%;
-  max-width: 1200px;
+  width: 100%;
+  max-width: none;
   margin: 0 auto;
   padding: 20px 0;
 }
@@ -50,7 +50,7 @@ classes: wide
 
 /* Container for timeline items */
 .container {
-  padding: 10px 50px;
+  padding: 10px 80px;
   position: relative;
   background-color: inherit;
   width: 50%;
@@ -88,7 +88,7 @@ classes: wide
   top: 22px;
   width: 0;
   z-index: 1;
-  right: 40px;
+  right: 70px;
   border: medium solid #f2f2f2;
   border-width: 10px 0 10px 10px;
   border-color: transparent transparent transparent #f2f2f2;
@@ -102,7 +102,7 @@ classes: wide
   top: 22px;
   width: 0;
   z-index: 1;
-  left: 40px;
+  left: 70px;
   border: medium solid #f2f2f2;
   border-width: 10px 10px 10px 0;
   border-color: transparent #f2f2f2 transparent transparent;
@@ -150,7 +150,19 @@ classes: wide
 @media screen and (max-width: 992px) {
   .page {
     width: 100% !important;
-    padding: 0 1em !important;
+    padding: 0 !important;
+  }
+  
+  .container {
+    padding: 10px 60px;
+  }
+  
+  .left::before {
+    right: 50px;
+  }
+  
+  .right::before {
+    left: 50px;
   }
 }
 
@@ -163,13 +175,13 @@ classes: wide
   /* All containers are full width */
   .container {
     width: 100%;
-    padding-left: 70px;
+    padding-left: 90px;
     padding-right: 25px;
   }
   
   /* Arrows all point right */
   .container::before {
-    left: 60px;
+    left: 80px;
     border: medium solid #f2f2f2;
     border-width: 10px 10px 10px 0;
     border-color: transparent #f2f2f2 transparent transparent;
