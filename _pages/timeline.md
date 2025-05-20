@@ -6,30 +6,37 @@ classes: wide
 ---
 
 <style>
-body .page {
-  width: 100%;
-  padding: 0;
+/* Reset for page container to respect sidebar */
+.page {
+  width: calc(100% - 300px) !important;
+  float: right !important;
+  margin-right: 0 !important;
+  padding-right: 1em !important;
+  padding-left: 1em !important;
 }
 
+/* Make sure inner wrap takes full width */
 .page__inner-wrap {
-  margin: 0;
-  padding: 0;
-  max-width: 100%;
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding: 1em 0 !important;
 }
 
 .page__content {
-  width: 100%;
-  padding: 0;
-  margin: 0;
+  width: 100% !important;
+  padding: 0 !important;
 }
 
+/* Timeline container */
 .timeline {
   position: relative;
-  width: 100%;
-  margin: 0;
+  width: 90%;
+  max-width: 1000px;
+  margin: 0 auto;
   padding: 20px 0;
 }
 
+/* The vertical line */
 .timeline::after {
   content: '';
   position: absolute;
@@ -41,6 +48,7 @@ body .page {
   margin-left: -3px;
 }
 
+/* Container for timeline items */
 .container {
   padding: 10px 40px;
   position: relative;
@@ -49,12 +57,12 @@ body .page {
   box-sizing: border-box;
 }
 
+/* Timeline circles */
 .container::after {
   content: '';
   position: absolute;
   width: 25px;
   height: 25px;
-  right: -17px;
   background-color: white;
   border: 4px solid #3498db;
   top: 20px;
@@ -62,14 +70,17 @@ body .page {
   z-index: 1;
 }
 
+/* Left containers positioning */
 .left {
   left: 0;
 }
 
+/* Right containers positioning */
 .right {
   left: 50%;
 }
 
+/* Arrows for left containers */
 .left::before {
   content: " ";
   height: 0;
@@ -83,6 +94,7 @@ body .page {
   border-color: transparent transparent transparent #f2f2f2;
 }
 
+/* Arrows for right containers */
 .right::before {
   content: " ";
   height: 0;
@@ -96,46 +108,66 @@ body .page {
   border-color: transparent #f2f2f2 transparent transparent;
 }
 
+/* Circle position for right containers */
 .right::after {
   left: -16px;
 }
 
+/* Circle position for left containers */
+.left::after {
+  right: -16px;
+}
+
+/* Content styling */
 .content {
   padding: 20px 30px;
   background-color: #f2f2f2;
   position: relative;
   border-radius: 6px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  margin: 0;
-  width: calc(100% - 40px);
+  width: 100%;
 }
 
+/* Hover effect */
 .content:hover {
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   transition: all 0.3s ease;
 }
 
+/* Headings */
 .content h2 {
   margin-top: 0;
   color: #3498db;
 }
 
+/* Date styling */
 .date {
   color: #6c757d;
   font-style: italic;
 }
 
+/* Mobile responsiveness */
+@media screen and (max-width: 992px) {
+  .page {
+    width: 100% !important;
+    padding: 0 1em !important;
+  }
+}
+
 @media screen and (max-width: 768px) {
+  /* The vertical line moves to left side */
   .timeline::after {
     left: 31px;
   }
   
+  /* All containers are full width */
   .container {
     width: 100%;
     padding-left: 70px;
     padding-right: 25px;
   }
   
+  /* Arrows all point right */
   .container::before {
     left: 60px;
     border: medium solid #f2f2f2;
@@ -143,10 +175,12 @@ body .page {
     border-color: transparent #f2f2f2 transparent transparent;
   }
 
+  /* Circles align left */
   .left::after, .right::after {
     left: 15px;
   }
   
+  /* Right containers behave like left */
   .right {
     left: 0%;
   }
@@ -211,11 +245,6 @@ body .page {
       <h2>PhD started</h2>
       <p class="date">Fall 2020</p>
       <p>Started research in Quantum Computing</p>
-      <!-- <ul>
-        <li>Gained fundamental understanding of image processing techniques</li>
-        <li>Implemented classical algorithms such as Canny and Sobel edge detectors</li>
-        <li>Developed skills in experiment design and quantitative evaluation</li>
-      </ul> -->
     </div>
   </div>
 </div>
