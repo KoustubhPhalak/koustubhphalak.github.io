@@ -164,13 +164,34 @@ author_profile: true
 
     <div class="container">
       <div class="content">
-        <h2>Fall 2023 - Spring 2024</h2>
-        <span class="date">Parametric Quantum Circuit (PQC) optimization, QuaLITi</span>
+        <h2>Quantum State Preparation using Genetic Algorithm, Quantum Dataset Distillation</h2>
+        <span class="date">Fall 2024 - Spring 2025</span>
+        <p>Wrote two works, one on selecting optimal quantum embedding using novel Genetic Algorithm and one on performing dataset distillation on Quantum Neural Networks</p>
+        <p>Salient works:</p>
+        <ul>
+          <li>"Optimizing Quantum Embedding using Genetic Algorithm for QML Applications" (ISQED 2024)</li>
+          <li>"Dataset Distillation for Quantum Neural Networks" (ISVLSI 2025)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="content">
+        <h2>Rigetti Summer Internship</h2>
+        <span class="date">Summer 2024</span>
+        <p>Interned at Rigetti Computing in Summer 2025 as a Quantum Algorithms Intern. Worked on qubit efficient QAOA algorithms.</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="content">
+        <h2>Parametric Quantum Circuit (PQC) optimization, QuaLITi</h2>
+        <span class="date">Fall 2023 - Spring 2024</span>
         <p>Wrote two works, one on PQC 1Q gate optimization and one on selecting best hardware for QNN inferencing</p>
         <p>Salient works:</p>
         <ul>
-          <li>"Non-parametric Greedy Optimization of Parametric Quantum Circuits"</li>
-          <li>"QuaLITi: Quantum Machine Learning Hardware Selection for Inferencing with Top-Tier Performance"</li>
+          <li>"Non-parametric Greedy Optimization of Parametric Quantum Circuits" (ISQED 2023)</li>
+          <li>"QuaLITi: Quantum Machine Learning Hardware Selection for Inferencing with Top-Tier Performance" (VLSID 2024)</li>
         </ul>
       </div>
     </div>
@@ -190,10 +211,10 @@ author_profile: true
         <p>Worked on quantum memories works such as QROM and QRAM. Also worked on optimizing shots in QML algorithms</p>
         <p>Salient works:</p>
         <ul>
-          <li>"Optimization of Quantum Read-Only Memory Circuits"</li>
-          <li>"Trainable PQC-Based QRAM for Quantum Storage"</li>
-          <li>"Shot Optimization in Quantum Machine Learning Architectures to Accelerate Training"</li>
-          <li>"Quantum Random Access Memory for Dummies"</li>
+          <li>"Optimization of Quantum Read-Only Memory Circuits" (ICCD 2022)</li>
+          <li>"Trainable PQC-Based QRAM for Quantum Storage" (IEEE Access 2023)</li>
+          <li>"Shot Optimization in Quantum Machine Learning Architectures to Accelerate Training" (IEEE Access 2023)</li>
+          <li>"Quantum Random Access Memory for Dummies" (Sensors 2023)</li>
         </ul>
       </div>
     </div>
@@ -210,7 +231,7 @@ author_profile: true
       <div class="content">
         <h2>First paper: Quantum PUF</h2>
         <span class="date">Fall 2020 - Spring 2021</span>
-        <p>Wrote my first PhD paper on fingerprinting quantum hardware titled "Quantum PUF for Security and Trust in Quantum Computing"</p>
+        <p>Wrote my first PhD paper on fingerprinting quantum hardware titled "Quantum PUF for Security and Trust in Quantum Computing" (JETCAS 2021)</p>
         <p>Accomplishments:</p>
         <ul>
           <li>Ran experiments on real quantum hardware</li>
