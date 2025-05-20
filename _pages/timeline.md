@@ -10,6 +10,8 @@ author_profile: true
   width: 100% !important;
   padding: 0 !important;
   float: none !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 .page__content {
@@ -17,6 +19,7 @@ author_profile: true
   padding: 0 !important;
   float: none !important;
   margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 .page__inner-wrap {
@@ -25,21 +28,27 @@ author_profile: true
   margin: 0 !important;
 }
 
+.page__header {
+  margin-bottom: 0 !important;
+}
+
 /* Main container for the timeline */
 .timeline-container {
   position: relative;
   width: 85%;
-  margin-left: 250px; /* Adjust based on your sidebar width */
+  margin-left: 220px; /* Adjust based on your sidebar width */
   padding: 0; /* Remove top padding */
+  margin-top: 0;
 }
 
 /* Page title - move it to prevent overlap */
 h1.page__title, 
 .page__title {
-  margin-left: 250px; /* Match container margin */
+  margin-left: 220px; /* Match container margin */
   padding-top: 0; /* Remove top padding */
-  padding-bottom: 10px;
+  padding-bottom: 0;
   margin-top: 0; /* Remove top margin */
+  margin-bottom: 10px !important;
 }
 
 /* The vertical line */
@@ -74,16 +83,16 @@ h1.page__title,
 .container::before {
   content: '';
   position: absolute;
-  width: 20px;
-  height: 20px;
-  left: -68px; /* Adjusted for perfect alignment */
+  width: 18px;
+  height: 18px;
+  left: -58px; /* Adjusted for perfect alignment */
   background-color: white;
-  border: 4px solid #3498db;
+  border: 3px solid #3498db;
   top: 22px;
   border-radius: 50%;
   z-index: 1;
   /* Ensure center of circle aligns with timeline */
-  transform: translateX(50%);
+  margin-left: -1px;
 }
 
 /* Content styling */
