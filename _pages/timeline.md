@@ -16,6 +16,7 @@ author_profile: true
   width: 100% !important;
   padding: 0 !important;
   float: none !important;
+  margin-top: 0 !important;
 }
 
 .page__inner-wrap {
@@ -29,22 +30,23 @@ author_profile: true
   position: relative;
   width: 85%;
   margin-left: 250px; /* Adjust based on your sidebar width */
-  padding: 20px 0;
+  padding: 0; /* Remove top padding */
 }
 
 /* Page title - move it to prevent overlap */
 h1.page__title, 
 .page__title {
   margin-left: 250px; /* Match container margin */
-  padding-top: 20px;
+  padding-top: 0; /* Remove top padding */
   padding-bottom: 10px;
+  margin-top: 0; /* Remove top margin */
 }
 
 /* The vertical line */
 .timeline {
   position: relative;
   width: 100%;
-  padding: 30px 0;
+  padding: 0; /* Remove vertical padding */
 }
 
 .timeline::after {
@@ -72,14 +74,16 @@ h1.page__title,
 .container::before {
   content: '';
   position: absolute;
-  width: 24px;
-  height: 24px;
-  left: -72px; /* Position circle precisely on the timeline */
+  width: 20px;
+  height: 20px;
+  left: -68px; /* Adjusted for perfect alignment */
   background-color: white;
   border: 4px solid #3498db;
   top: 22px;
   border-radius: 50%;
   z-index: 1;
+  /* Ensure center of circle aligns with timeline */
+  transform: translateX(50%);
 }
 
 /* Content styling */
@@ -166,6 +170,7 @@ h1.page__title,
   h1.page__title, 
   .page__title {
     margin-left: 15px; /* Reduce margin on mobile */
+    margin-top: 0;
   }
   
   .timeline::after {
@@ -179,6 +184,7 @@ h1.page__title,
   
   .container::before {
     left: -42px; /* Adjust circle position for mobile */
+    transform: translateX(50%); /* Maintain centering */
   }
 }
 
