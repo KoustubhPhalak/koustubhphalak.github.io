@@ -161,53 +161,56 @@ author_profile: true
 
 <div class="timeline-container">
   <div class="timeline">
+
     <div class="container">
       <div class="content">
-        <h2>Doctoral Research</h2>
-        <span class="date">2022 - Present</span>
-        <p>Working on novel approaches to machine learning models for computer vision applications. Focus on developing efficient deep learning architectures for real-time object detection in resource-constrained environments.</p>
-        <p>Key achievements:</p>
+        <h2>Fall 2023 - Spring 2024</h2>
+        <span class="date">Parametric Quantum Circuit (PQC) optimization, QuaLITi</span>
+        <p>Wrote two works, one on PQC 1Q gate optimization and one on selecting best hardware for QNN inferencing</p>
+        <p>Salient works:</p>
         <ul>
-          <li>Developed a lightweight CNN architecture that achieves 95% accuracy while using 40% fewer parameters</li>
-          <li>Published findings in top-tier conferences including CVPR and ICCV</li>
-          <li>Collaborated with industry partners to implement solutions in embedded systems</li>
+          <li>"Non-parametric Greedy Optimization of Parametric Quantum Circuits"</li>
+          <li>"QuaLITi: Quantum Machine Learning Hardware Selection for Inferencing with Top-Tier Performance"</li>
         </ul>
       </div>
     </div>
     
     <div class="container">
       <div class="content">
-        <h2>Master's Thesis Research</h2>
-        <span class="date">2020 - 2022</span>
-        <p>Investigated transfer learning techniques for medical image analysis. Focused on applying deep learning to improve diagnostic accuracy in radiological images.</p>
-        <p>Key outcomes:</p>
-        <ul>
-          <li>Designed a novel transfer learning approach that improved classification accuracy by 17%</li>
-          <li>Implemented a prototype system that was tested in collaboration with University Hospital</li>
-          <li>Research led to two journal publications in IEEE Transactions on Medical Imaging</li>
-        </ul>
+        <h2>PhD Comprehensive Exam</h2>
+        <span class="date">Spring 2023</span>
+        <p>Gave my PhD Comprehensive examination presentation in front of committee members Dr. Swaroop Ghosh, Dr. Mahmut Kandemir, Dr. Abhronil Sengupta, Dr. Sahin Ozdemir and passed.</p>
       </div>
     </div>
     
     <div class="container">
       <div class="content">
-        <h2>Research Internship at Tech Corp</h2>
-        <span class="date">Summer 2019</span>
-        <p>Worked with the R&D team on developing computer vision algorithms for autonomous navigation systems. Focused on real-time obstacle detection and avoidance.</p>
-        <p>Contributions:</p>
+        <h2>Quantum Memories, Shot Optimization</h2>
+        <span class="date">Fall 2021 - Spring 2023</span>
+        <p>Worked on quantum memories works such as QROM and QRAM. Also worked on optimizing shots in QML algorithms</p>
+        <p>Salient works:</p>
         <ul>
-          <li>Implemented and optimized SLAM algorithms for indoor navigation</li>
-          <li>Developed a simulation environment for testing navigation algorithms</li>
-          <li>Work resulted in a patent application for a novel sensor fusion approach</li>
+          <li>"Optimization of Quantum Read-Only Memory Circuits"</li>
+          <li>"Trainable PQC-Based QRAM for Quantum Storage"</li>
+          <li>"Shot Optimization in Quantum Machine Learning Architectures to Accelerate Training"</li>
+          <li>"Quantum Random Access Memory for Dummies"</li>
         </ul>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="content">
+        <h2>PhD Qualifying Exam</h2>
+        <span class="date">Spring 2021</span>
+        <p>Passed PhD Qualifying Examination</p>
       </div>
     </div>
     
     <div class="container">
       <div class="content">
         <h2>First paper: Quantum PUF</h2>
-        <span class="date">Fall 2020-Spring 2021</span>
-        <p>Wrote my first PhD paper on fingerprinting quantum hardware</p>
+        <span class="date">Fall 2020 - Spring 2021</span>
+        <p>Wrote my first PhD paper on fingerprinting quantum hardware titled "Quantum PUF for Security and Trust in Quantum Computing"</p>
         <p>Accomplishments:</p>
         <ul>
           <li>Ran experiments on real quantum hardware</li>
