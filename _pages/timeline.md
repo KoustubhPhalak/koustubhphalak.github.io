@@ -2,13 +2,31 @@
 title: "Research Timeline"
 permalink: /research-timeline/
 author_profile: true
+classes: wide
 ---
 
 <style>
+body .page {
+  width: 100%;
+  padding: 0;
+}
+
+.page__inner-wrap {
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+}
+
+.page__content {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
 .timeline {
   position: relative;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
   padding: 20px 0;
 }
 
@@ -28,6 +46,7 @@ author_profile: true
   position: relative;
   background-color: inherit;
   width: 50%;
+  box-sizing: border-box;
 }
 
 .container::after {
@@ -87,6 +106,8 @@ author_profile: true
   position: relative;
   border-radius: 6px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin: 0;
+  width: calc(100% - 40px);
 }
 
 .content:hover {
