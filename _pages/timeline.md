@@ -187,15 +187,14 @@ author_profile: true
   </div>
   <div class="container left">
     <div class="content">
-      <h2>First Research Experience</h2>
-      <p class="date">Summer 2017</p>
-      <p>Participated in a summer research program focusing on image processing algorithms. Worked on implementing and comparing various edge detection methods.</p>
-      <p>Learning outcomes:</p>
-      <ul>
+      <h2>PhD started</h2>
+      <p class="date">Fall 2020</p>
+      <p>Started research in Quantum Computing</p>
+      <!-- <ul>
         <li>Gained fundamental understanding of image processing techniques</li>
         <li>Implemented classical algorithms such as Canny and Sobel edge detectors</li>
         <li>Developed skills in experiment design and quantitative evaluation</li>
-      </ul>
+      </ul> -->
     </div>
   </div>
 </div>
