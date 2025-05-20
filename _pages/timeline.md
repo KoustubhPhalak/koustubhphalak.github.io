@@ -5,17 +5,11 @@ author_profile: true
 ---
 
 <style>
-/* Reset minimal-mistakes theme settings that cause conflicts */
+/* Reset minimal-mistakes theme settings */
 .page {
   width: 100% !important;
   padding: 0 !important;
   float: none !important;
-}
-
-.sidebar {
-  opacity: 1;
-  -webkit-transition: opacity 0.2s ease-in-out;
-  transition: opacity 0.2s ease-in-out;
 }
 
 .page__content {
@@ -30,26 +24,21 @@ author_profile: true
   margin: 0 !important;
 }
 
-/* Create a full-width container for our timeline */
-.timeline-wrapper {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 20px;
+/* Main container for the timeline */
+.timeline-container {
   position: relative;
-  overflow: hidden;
-  margin-left: 300px; /* Adjust based on your sidebar width */
+  width: 85%;
+  margin-left: 250px; /* Adjust based on your sidebar width */
+  padding: 20px 0;
 }
 
-/* Main timeline with vertical line */
+/* The vertical line */
 .timeline {
   position: relative;
   width: 100%;
-  margin: 0 0 0 -50px; /* Pull timeline to the left to make more room */
   padding: 30px 0;
 }
 
-/* Vertical line */
 .timeline::after {
   content: '';
   position: absolute;
@@ -57,50 +46,61 @@ author_profile: true
   background-color: #3498db;
   top: 0;
   bottom: 0;
-  left: 20%; /* Position line at 20% to give more room for content */
+  left: 60px; /* Position line on the left */
   margin-left: -3px;
+  z-index: 0;
 }
 
-/* Timeline containers */
+/* Container for each timeline item */
 .container {
   position: relative;
-  width: 100%;
-  padding: 20px 0;
-  clear: both;
+  background-color: inherit;
+  width: calc(100% - 100px); /* Width minus the space for the line and some padding */
+  margin-left: 100px; /* Space for the timeline and circle */
+  margin-bottom: 30px;
 }
 
-/* Container content */
+/* The circles on the timeline */
+.container::before {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  left: -62px; /* Position circle on the timeline */
+  background-color: white;
+  border: 4px solid #3498db;
+  top: 22px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* Content styling */
 .content {
-  padding: 25px 35px;
+  padding: 20px 30px;
   background-color: #f2f2f2;
   position: relative;
   border-radius: 8px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-  margin-bottom: 20px;
-  max-width: 75%; /* Make content boxes very wide */
-  margin-left: 25%; /* Position after the timeline */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-/* Hover effect */
 .content:hover {
+  box-shadow: 0 5px 12px rgba(0,0,0,0.15);
   transform: translateX(5px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
-/* Circle markers */
-.container::before {
-  content: '';
+/* Arrow pointing to the timeline */
+.content::before {
+  content: " ";
+  height: 0;
   position: absolute;
-  width: 25px;
-  height: 25px;
-  background-color: white;
-  border: 4px solid #3498db;
-  border-radius: 50%;
-  top: 35px;
-  left: 20%;
-  margin-left: -16px;
+  top: 22px;
+  width: 0;
   z-index: 1;
+  left: -10px;
+  border: medium solid #f2f2f2;
+  border-width: 10px 10px 10px 0;
+  border-color: transparent #f2f2f2 transparent transparent;
 }
 
 /* Content styling */
@@ -131,58 +131,57 @@ author_profile: true
   margin-bottom: 5px;
 }
 
-/* Alternating content (optional) */
+/* Alternating colors */
 .container:nth-child(odd) .content {
   background-color: #f9f9f9;
 }
 
-/* Mobile responsiveness */
+.container:nth-child(odd) .content::before {
+  border-color: transparent #f9f9f9 transparent transparent;
+}
+
+/* Responsive layout */
 @media screen and (max-width: 1024px) {
-  .timeline-wrapper {
+  .timeline-container {
+    width: 90%;
     margin-left: 100px;
-  }
-  
-  .timeline::after {
-    left: 50px;
-  }
-  
-  .container::before {
-    left: 50px;
-  }
-  
-  .content {
-    margin-left: 100px;
-    max-width: calc(100% - 150px);
   }
 }
 
 @media screen and (max-width: 768px) {
-  .timeline-wrapper {
+  .timeline-container {
+    width: 100%;
     margin-left: 0;
     padding: 0 15px;
-  }
-  
-  .timeline {
-    margin: 0;
   }
   
   .timeline::after {
     left: 30px;
   }
   
-  .container::before {
-    left: 30px;
+  .container {
+    margin-left: 70px;
+    width: calc(100% - 85px);
   }
   
+  .container::before {
+    left: -32px;
+  }
+}
+
+@media screen and (max-width: 480px) {
   .content {
-    margin-left: 70px;
-    max-width: calc(100% - 90px);
     padding: 15px 20px;
+  }
+  
+  .container {
+    margin-left: 60px;
+    width: calc(100% - 75px);
   }
 }
 </style>
 
-<div class="timeline-wrapper">
+<div class="timeline-container">
   <div class="timeline">
     <div class="container">
       <div class="content">
