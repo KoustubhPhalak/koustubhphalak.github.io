@@ -5,54 +5,15 @@ author_profile: true
 ---
 
 <style>
-/* Reset parent container elements to eliminate unwanted spacing */
-#main {
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-.page__inner-wrap {
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-article.page {
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-.page__content {
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-header.page__header {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-section.page__content {
+/* Only reset spacing for timeline-specific elements */
+.page__content section {
   margin-top: 0 !important;
   padding-top: 0 !important;
 }
 
-/* Main container for the timeline */
-.timeline-container {
-  position: relative;
-  width: 85%;
-  margin-left: 220px; /* Adjust based on your sidebar width */
-  padding: 0;
-  margin-top: 20px; /* Add some top margin */
-  margin-bottom: 40px; /* Add bottom margin */
-}
-
-/* Page title adjustment */
-h1.page__title, 
-.page__title {
-  margin-left: 220px;
-  padding: 0;
-  margin-top: 20px; /* Add top margin to title */
-  margin-bottom: 20px !important; /* Increase bottom margin */
+/* Restore sidebar positioning - DO NOT modify these elements */
+#main, .page, .page__inner-wrap, article.page, .page__content, header.page__header {
+  /* No resets here - let the theme handle these */
 }
 
 /* The vertical line */
@@ -81,7 +42,7 @@ h1.page__title,
   background-color: inherit;
   width: calc(100% - 100px);
   margin-left: 100px;
-  margin-bottom: 25px; /* Increased spacing between items */
+  margin-bottom: 25px;
   padding: 0;
 }
 
@@ -97,18 +58,17 @@ h1.page__title,
   top: 22px;
   border-radius: 50%;
   z-index: 1;
-  margin-left: -1px;
+  margin-left: -1px; /* Fine-tune circle position */
 }
 
 /* Content styling */
 .content {
-  padding: 25px 30px; /* Increased padding */
+  padding: 25px 30px;
   background-color: #f2f2f2;
   position: relative;
   border-radius: 8px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
-  margin: 0;
 }
 
 .content:hover {
@@ -141,27 +101,27 @@ h1.page__title,
 .date {
   color: #6c757d;
   font-style: italic;
-  margin-bottom: 20px; /* Increased spacing */
+  margin-bottom: 20px;
   display: block;
 }
 
 .content p {
   margin-top: 0;
-  margin-bottom: 15px; /* Increased */
+  margin-bottom: 15px;
   font-size: 1em;
   line-height: 1.6;
 }
 
 .content ul {
   margin-top: 0;
-  margin-bottom: 15px; /* Increased */
-  padding-left: 25px; /* Slightly increased */
+  margin-bottom: 15px;
+  padding-left: 25px;
   font-size: 1em;
   line-height: 1.6;
 }
 
 .content li {
-  margin-bottom: 8px; /* Increased */
+  margin-bottom: 8px;
 }
 
 /* Alternating colors */
@@ -173,43 +133,13 @@ h1.page__title,
   border-color: transparent #f9f9f9 transparent transparent;
 }
 
-/* Add extra space at the top of the timeline */
-.timeline::before {
-  content: '';
-  display: block;
-  height: 20px;
-}
-
 /* Add extra space at the bottom of the timeline */
 .timeline::after {
   bottom: -20px;
 }
 
-/* Responsive layout */
-@media screen and (max-width: 1024px) {
-  .timeline-container {
-    width: 90%;
-    margin-left: 100px;
-  }
-  
-  h1.page__title, 
-  .page__title {
-    margin-left: 100px;
-  }
-}
-
+/* Responsive layout - only for the timeline elements */
 @media screen and (max-width: 768px) {
-  .timeline-container {
-    width: 100%;
-    margin-left: 0;
-    padding: 0 25px; /* Increased padding */
-  }
-  
-  h1.page__title, 
-  .page__title {
-    margin-left: 25px; /* Increased */
-  }
-  
   .timeline::after {
     left: 30px;
   }
