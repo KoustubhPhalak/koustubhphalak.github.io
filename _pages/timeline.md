@@ -5,7 +5,7 @@ author_profile: true
 ---
 
 <style>
-/* Reset parent container elements to eliminate spacing */
+/* Reset parent container elements to eliminate unwanted spacing */
 #main {
   padding: 0 !important;
   margin: 0 !important;
@@ -26,7 +26,6 @@ article.page {
   margin: 0 !important;
 }
 
-/* Reset other potential spacing issues */
 header.page__header {
   margin: 0 !important;
   padding: 0 !important;
@@ -43,7 +42,8 @@ section.page__content {
   width: 85%;
   margin-left: 220px; /* Adjust based on your sidebar width */
   padding: 0;
-  margin-top: 0;
+  margin-top: 20px; /* Add some top margin */
+  margin-bottom: 40px; /* Add bottom margin */
 }
 
 /* Page title adjustment */
@@ -51,8 +51,8 @@ h1.page__title,
 .page__title {
   margin-left: 220px;
   padding: 0;
-  margin-top: 0;
-  margin-bottom: 10px !important;
+  margin-top: 20px; /* Add top margin to title */
+  margin-bottom: 20px !important; /* Increase bottom margin */
 }
 
 /* The vertical line */
@@ -81,7 +81,7 @@ h1.page__title,
   background-color: inherit;
   width: calc(100% - 100px);
   margin-left: 100px;
-  margin-bottom: 10px;
+  margin-bottom: 25px; /* Increased spacing between items */
   padding: 0;
 }
 
@@ -97,13 +97,12 @@ h1.page__title,
   top: 22px;
   border-radius: 50%;
   z-index: 1;
-  /* Calculate exact position to center on the line */
   margin-left: -1px;
 }
 
 /* Content styling */
 .content {
-  padding: 20px 30px;
+  padding: 25px 30px; /* Increased padding */
   background-color: #f2f2f2;
   position: relative;
   border-radius: 8px;
@@ -136,32 +135,33 @@ h1.page__title,
   margin-top: 0;
   color: #3498db;
   font-size: 1.5em;
+  margin-bottom: 10px;
 }
 
 .date {
   color: #6c757d;
   font-style: italic;
-  margin-bottom: 15px;
+  margin-bottom: 20px; /* Increased spacing */
   display: block;
 }
 
 .content p {
   margin-top: 0;
-  margin-bottom: 10px;
+  margin-bottom: 15px; /* Increased */
   font-size: 1em;
   line-height: 1.6;
 }
 
 .content ul {
   margin-top: 0;
-  margin-bottom: 10px;
-  padding-left: 20px;
+  margin-bottom: 15px; /* Increased */
+  padding-left: 25px; /* Slightly increased */
   font-size: 1em;
   line-height: 1.6;
 }
 
 .content li {
-  margin-bottom: 5px;
+  margin-bottom: 8px; /* Increased */
 }
 
 /* Alternating colors */
@@ -171,6 +171,18 @@ h1.page__title,
 
 .container:nth-child(odd) .content::before {
   border-color: transparent #f9f9f9 transparent transparent;
+}
+
+/* Add extra space at the top of the timeline */
+.timeline::before {
+  content: '';
+  display: block;
+  height: 20px;
+}
+
+/* Add extra space at the bottom of the timeline */
+.timeline::after {
+  bottom: -20px;
 }
 
 /* Responsive layout */
@@ -190,12 +202,12 @@ h1.page__title,
   .timeline-container {
     width: 100%;
     margin-left: 0;
-    padding: 0 15px;
+    padding: 0 25px; /* Increased padding */
   }
   
   h1.page__title, 
   .page__title {
-    margin-left: 15px;
+    margin-left: 25px; /* Increased */
   }
   
   .timeline::after {
@@ -214,7 +226,7 @@ h1.page__title,
 
 @media screen and (max-width: 480px) {
   .content {
-    padding: 15px 20px;
+    padding: 20px 25px;
   }
   
   .container {
