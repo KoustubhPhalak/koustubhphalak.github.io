@@ -11,11 +11,6 @@ author_profile: true
   padding-top: 0 !important;
 }
 
-/* Restore sidebar positioning - DO NOT modify these elements */
-#main, .page, .page__inner-wrap, article.page, .page__content, header.page__header {
-  /* No resets here - let the theme handle these */
-}
-
 /* The vertical line */
 .timeline {
   position: relative;
@@ -46,19 +41,18 @@ author_profile: true
   padding: 0;
 }
 
-/* The circles on the timeline */
+/* The circles on the timeline - PERFECTLY CENTERED */
 .container::before {
   content: '';
   position: absolute;
   width: 18px;
   height: 18px;
-  left: -59px;
+  left: -57px; /* Adjusted for perfect centering */
   background-color: white;
   border: 3px solid #3498db;
   top: 22px;
   border-radius: 50%;
   z-index: 1;
-  margin-left: -1px; /* Fine-tune circle position */
 }
 
 /* Content styling */
@@ -133,11 +127,6 @@ author_profile: true
   border-color: transparent #f9f9f9 transparent transparent;
 }
 
-/* Add extra space at the bottom of the timeline */
-.timeline::after {
-  bottom: -20px;
-}
-
 /* Responsive layout - only for the timeline elements */
 @media screen and (max-width: 768px) {
   .timeline::after {
@@ -150,7 +139,7 @@ author_profile: true
   }
   
   .container::before {
-    left: -39px;
+    left: -37px; /* Adjusted for mobile perfect centering */
   }
 }
 
@@ -165,7 +154,7 @@ author_profile: true
   }
   
   .container::before {
-    left: -29px;
+    left: -27px; /* Adjusted for smallest screens */
   }
 }
 </style>
