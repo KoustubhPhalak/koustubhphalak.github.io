@@ -76,7 +76,7 @@ h1.page__title,
   background-color: inherit;
   width: calc(100% - 100px); /* Width minus the space for the line and some padding */
   margin-left: 100px; /* Space for the timeline and circle */
-  margin-bottom: 30px;
+  margin-bottom: 15px; /* FIXED: Reduced from 30px to remove excessive vertical spacing */
 }
 
 /* The circles on the timeline */
@@ -85,14 +85,14 @@ h1.page__title,
   position: absolute;
   width: 18px;
   height: 18px;
-  left: -58px; /* Adjusted for perfect alignment */
+  left: -60px; /* FIXED: Adjusted for perfect alignment with timeline */
   background-color: white;
   border: 3px solid #3498db;
   top: 22px;
   border-radius: 50%;
   z-index: 1;
-  /* Ensure center of circle aligns with timeline */
-  margin-left: -1px;
+  /* FIXED: Ensure center of circle aligns with timeline */
+  transform: translateX(3px); /* Center the circle on the line */
 }
 
 /* Content styling */
@@ -103,6 +103,7 @@ h1.page__title,
   border-radius: 8px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
+  margin-top: 0; /* FIXED: Remove any top margin */
 }
 
 .content:hover {
@@ -161,6 +162,11 @@ h1.page__title,
   border-color: transparent #f9f9f9 transparent transparent;
 }
 
+/* FIXED: Eliminate any gaps between containers */
+.timeline > .container + .container {
+  margin-top: 0;
+}
+
 /* Responsive layout */
 @media screen and (max-width: 1024px) {
   .timeline-container {
@@ -193,7 +199,7 @@ h1.page__title,
   
   .container::before {
     left: -42px; /* Adjust circle position for mobile */
-    transform: translateX(50%); /* Maintain centering */
+    transform: translateX(3px); /* FIXED: Maintain centering on line */
   }
 }
 
