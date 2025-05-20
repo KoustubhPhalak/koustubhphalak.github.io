@@ -5,31 +5,36 @@ author_profile: true
 ---
 
 <style>
-/* Reset minimal-mistakes theme settings */
-.page {
-  width: 100% !important;
-  padding: 0 !important;
-  float: none !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-.page__content {
-  width: 100% !important;
-  padding: 0 !important;
-  float: none !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-.page__inner-wrap {
-  width: 100% !important;
+/* Reset parent container elements to eliminate spacing */
+#main {
   padding: 0 !important;
   margin: 0 !important;
 }
 
-.page__header {
-  margin-bottom: 0 !important;
+.page__inner-wrap {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+article.page {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.page__content {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Reset other potential spacing issues */
+header.page__header {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+section.page__content {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
 }
 
 /* Main container for the timeline */
@@ -37,17 +42,16 @@ author_profile: true
   position: relative;
   width: 85%;
   margin-left: 220px; /* Adjust based on your sidebar width */
-  padding: 0; /* Remove top padding */
+  padding: 0;
   margin-top: 0;
 }
 
-/* Page title - move it to prevent overlap */
+/* Page title adjustment */
 h1.page__title, 
 .page__title {
-  margin-left: 220px; /* Match container margin */
-  padding-top: 0; /* Remove top padding */
-  padding-bottom: 0;
-  margin-top: 0; /* Remove top margin */
+  margin-left: 220px;
+  padding: 0;
+  margin-top: 0;
   margin-bottom: 10px !important;
 }
 
@@ -55,7 +59,8 @@ h1.page__title,
 .timeline {
   position: relative;
   width: 100%;
-  padding: 0; /* Remove vertical padding */
+  padding: 0;
+  margin: 0;
 }
 
 .timeline::after {
@@ -65,7 +70,7 @@ h1.page__title,
   background-color: #3498db;
   top: 0;
   bottom: 0;
-  left: 60px; /* Position line on the left */
+  left: 60px;
   margin-left: -3px;
   z-index: 0;
 }
@@ -74,9 +79,10 @@ h1.page__title,
 .container {
   position: relative;
   background-color: inherit;
-  width: calc(100% - 100px); /* Width minus the space for the line and some padding */
-  margin-left: 100px; /* Space for the timeline and circle */
-  margin-bottom: 15px; /* FIXED: Reduced from 30px to remove excessive vertical spacing */
+  width: calc(100% - 100px);
+  margin-left: 100px;
+  margin-bottom: 10px;
+  padding: 0;
 }
 
 /* The circles on the timeline */
@@ -85,14 +91,14 @@ h1.page__title,
   position: absolute;
   width: 18px;
   height: 18px;
-  left: -60px; /* FIXED: Adjusted for perfect alignment with timeline */
+  left: -59px;
   background-color: white;
   border: 3px solid #3498db;
   top: 22px;
   border-radius: 50%;
   z-index: 1;
-  /* FIXED: Ensure center of circle aligns with timeline */
-  transform: translateX(3px); /* Center the circle on the line */
+  /* Calculate exact position to center on the line */
+  margin-left: -1px;
 }
 
 /* Content styling */
@@ -103,7 +109,7 @@ h1.page__title,
   border-radius: 8px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
-  margin-top: 0; /* FIXED: Remove any top margin */
+  margin: 0;
 }
 
 .content:hover {
@@ -139,14 +145,19 @@ h1.page__title,
   display: block;
 }
 
-.content p, .content ul {
+.content p {
+  margin-top: 0;
   margin-bottom: 10px;
   font-size: 1em;
   line-height: 1.6;
 }
 
 .content ul {
+  margin-top: 0;
+  margin-bottom: 10px;
   padding-left: 20px;
+  font-size: 1em;
+  line-height: 1.6;
 }
 
 .content li {
@@ -162,15 +173,15 @@ h1.page__title,
   border-color: transparent #f9f9f9 transparent transparent;
 }
 
-/* FIXED: Eliminate any gaps between containers */
-.timeline > .container + .container {
-  margin-top: 0;
-}
-
 /* Responsive layout */
 @media screen and (max-width: 1024px) {
   .timeline-container {
     width: 90%;
+    margin-left: 100px;
+  }
+  
+  h1.page__title, 
+  .page__title {
     margin-left: 100px;
   }
 }
@@ -184,8 +195,7 @@ h1.page__title,
   
   h1.page__title, 
   .page__title {
-    margin-left: 15px; /* Reduce margin on mobile */
-    margin-top: 0;
+    margin-left: 15px;
   }
   
   .timeline::after {
@@ -198,8 +208,7 @@ h1.page__title,
   }
   
   .container::before {
-    left: -42px; /* Adjust circle position for mobile */
-    transform: translateX(3px); /* FIXED: Maintain centering on line */
+    left: -39px;
   }
 }
 
@@ -211,6 +220,10 @@ h1.page__title,
   .container {
     margin-left: 60px;
     width: calc(100% - 75px);
+  }
+  
+  .container::before {
+    left: -29px;
   }
 }
 </style>
