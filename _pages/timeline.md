@@ -174,14 +174,14 @@ author_profile: true
   </div>
   <div class="container right">
     <div class="content">
-      <h2>Undergraduate Research Project</h2>
-      <p class="date">2018 - 2019</p>
-      <p>Conducted research on facial recognition systems with a focus on privacy preservation and bias mitigation.</p>
+      <h2>First paper: Quantum PUF</h2>
+      <p class="date">Fall 2020-Spring 2021</p>
+      <p>Wrote my first PhD paper on fingerprinting quantum hardware</p>
       <p>Accomplishments:</p>
       <ul>
-        <li>Developed a privacy-preserving facial recognition framework</li>
-        <li>Analyzed bias in existing datasets and proposed methods for more balanced training</li>
-        <li>Presented findings at the Undergraduate Research Symposium</li>
+        <li>Ran experiments on real quantum hardware</li>
+        <li>Distinguishable results for both strong and weak PUFs</li>
+        <li>Superposition and Decoherence-based PUFs</li>
       </ul>
     </div>
   </div>
