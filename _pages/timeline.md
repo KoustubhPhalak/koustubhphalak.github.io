@@ -47,7 +47,7 @@ author_profile: true
   position: absolute;
   width: 18px;
   height: 18px;
-  left: -49px; /* Adjusted for perfect centering */
+  left: -49px; /* Perfect centering for desktop */
   background-color: white;
   border: 3px solid #3498db;
   top: 22px;
@@ -127,7 +127,7 @@ author_profile: true
   border-color: transparent #f9f9f9 transparent transparent;
 }
 
-/* Responsive layout - only for the timeline elements */
+/* Responsive layout - precise adjustments for different screen sizes */
 @media screen and (max-width: 768px) {
   .timeline::after {
     left: 30px;
@@ -139,10 +139,11 @@ author_profile: true
   }
   
   .container::before {
-    left: -37px; /* Adjusted for mobile perfect centering */
+    left: -29px; /* Perfect centering for tablets */
   }
 }
 
+/* Fixed mobile view for smaller screens */
 @media screen and (max-width: 480px) {
   .content {
     padding: 20px 25px;
@@ -154,7 +155,23 @@ author_profile: true
   }
   
   .container::before {
-    left: -27px; /* Adjusted for smallest screens */
+    left: -19px; /* Perfect centering for mobile */
+  }
+}
+
+/* Extra small devices */
+@media screen and (max-width: 375px) {
+  .container::before {
+    left: -19px; /* Consistent for very small screens */
+  }
+  
+  .timeline::after {
+    left: 30px;
+  }
+  
+  .container {
+    margin-left: 55px;
+    width: calc(100% - 65px);
   }
 }
 </style>
