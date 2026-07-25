@@ -1,97 +1,50 @@
+{% assign scholar = site.data.scholar %}
+{% assign scholar_id = include.scholar_id | default: "B36kyxIAAAAJ" %}
+
 <div class="scholar-widget">
-    <h3>📚 Google Scholar Profile</h3>
-    <div class="scholar-stats">
-      <div class="stat">
-        <span class="number" id="citations">Loading...</span>
-        <span class="label">Citations</span>
-      </div>
-      <div class="stat">
-        <span class="number" id="h-index">Loading...</span>
-        <span class="label">h-index</span>
-      </div>
-      <div class="stat">
-        <span class="number" id="i10-index">Loading...</span>
-        <span class="label">i10-index</span>
-      </div>
+  <h3>📚 Google Scholar Profile</h3>
+
+  <div class="scholar-stats">
+    <div class="stat">
+      <span class="number">
+        {{ scholar["total-cites"] | default: "—" }}
+      </span>
+      <span class="label">Citations</span>
     </div>
-    <a href="https://scholar.google.com/citations?user={{ include.scholar_id }}" target="_blank">
-      View Full Profile →
-    </a>
-    <p id="last-updated" style="text-align: center; font-size: 12px; color: #888; margin-top: 10px;">
-      Loading...
-    </p>
+
+    <div class="stat">
+      <span class="number">
+        {{ scholar["h-index"] | default: "—" }}
+      </span>
+      <span class="label">h-index</span>
+    </div>
+
+    <div class="stat">
+      <span class="number">
+        {{ scholar["i10-index"] | default: "—" }}
+      </span>
+      <span class="label">i10-index</span>
+    </div>
   </div>
-  
-  <script>
-  function loadScholarData() {
-    var scholarId = '{{ include.scholar_id }}';
-    var cacheKey = 'scholar_' + scholarId;
-    var now = Date.now();
-    var oneDay = 86400000;
-    
-    var cached = localStorage.getItem(cacheKey);
-    
-    if (cached) {
-      var data = JSON.parse(cached);
-      var age = now - data.time;
-      
-      if (age < oneDay) {
-        document.getElementById('citations').textContent = data.citations;
-        document.getElementById('h-index').textContent = data.hIndex;
-        document.getElementById('i10-index').textContent = data.i10Index;
-        document.getElementById('last-updated').textContent = 'Cached: ' + new Date(data.time).toLocaleDateString();
-        return;
-      }
-    }
-    
-    var url = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent('https://scholar.google.com/citations?user=' + scholarId + '&hl=en');
-    
-    fetch(url)
-      .then(function(r) { return r.text(); })
-      .then(function(html) {
-        var doc = new DOMParser().parseFromString(html, 'text/html');
-        var stats = doc.querySelectorAll('.gsc_rsb_std');
-        
-        if (stats.length >= 3) {
-          var citations = stats[0].textContent.trim();
-          var hIndex = stats[2].textContent.trim();
-          var i10Index = stats[4] ? stats[4].textContent.trim() : 'N/A';
-          
-          document.getElementById('citations').textContent = citations;
-          document.getElementById('h-index').textContent = hIndex;
-          document.getElementById('i10-index').textContent = i10Index;
-          document.getElementById('last-updated').textContent = 'Fresh: ' + new Date().toLocaleDateString();
-          
-          localStorage.setItem(cacheKey, JSON.stringify({
-            citations: citations,
-            hIndex: hIndex,
-            i10Index: i10Index,
-            time: now
-          }));
-        } else {
-          throw new Error('No stats found');
-        }
-      })
-      .catch(function() {
-        if (cached) {
-          var data = JSON.parse(cached);
-          document.getElementById('citations').textContent = data.citations;
-          document.getElementById('h-index').textContent = data.hIndex;
-          document.getElementById('i10-index').textContent = data.i10Index;
-          document.getElementById('last-updated').textContent = 'Old cache: ' + new Date(data.time).toLocaleDateString();
-        } else {
-          document.getElementById('citations').textContent = 'Error';
-          document.getElementById('h-index').textContent = 'Error';
-          document.getElementById('i10-index').textContent = 'Error';
-          document.getElementById('last-updated').textContent = 'Failed to load';
-        }
-      });
-  }
-  
-  window.addEventListener('load', loadScholarData);
-  </script>
-  
-  <style>
+
+  <a
+    href="https://scholar.google.com/citations?user={{ scholar_id }}&hl=en"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    View Full Profile →
+  </a>
+
+  <p class="scholar-updated">
+    {% if scholar %}
+      Metrics updated automatically
+    {% else %}
+      Metrics temporarily unavailable
+    {% endif %}
+  </p>
+</div>
+
+<style>
   .scholar-widget {
     background: #f9f9f9;
     border: 1px solid #ddd;
@@ -99,47 +52,77 @@
     padding: 20px;
     margin: 20px 0;
   }
-  
+
   .scholar-widget h3 {
     margin-top: 0;
     text-align: center;
     color: #333;
   }
-  
+
   .scholar-stats {
     display: flex;
     justify-content: space-around;
+    gap: 15px;
     margin: 20px 0;
   }
-  
+
   .stat {
+    flex: 1;
     text-align: center;
   }
-  
+
   .number {
     display: block;
     font-size: 24px;
     font-weight: bold;
     color: #4285f4;
   }
-  
+
   .label {
+    display: block;
+    margin-top: 4px;
     font-size: 14px;
     color: #666;
   }
-  
+
   .scholar-widget a {
     display: block;
-    text-align: center;
-    margin-top: 15px;
     padding: 10px;
+    margin-top: 15px;
+    border-radius: 5px;
     background: #4285f4;
     color: white;
+    text-align: center;
     text-decoration: none;
-    border-radius: 5px;
   }
-  
+
   .scholar-widget a:hover {
     background: #3367d6;
+    color: white;
   }
-  </style>
+
+  .scholar-updated {
+    margin: 10px 0 0;
+    color: #888;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    .scholar-widget {
+      padding: 15px;
+    }
+
+    .scholar-stats {
+      gap: 8px;
+    }
+
+    .number {
+      font-size: 21px;
+    }
+
+    .label {
+      font-size: 12px;
+    }
+  }
+</style>
