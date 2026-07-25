@@ -1,0 +1,116 @@
+name: Update Google Scholar stats
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Every Monday at 06:17 UTC
+    - cron: "17 6 * * 1"
+
+permissions:
+  contents: write
+
+jobs:
+  update-scholar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch Google Scholar metrics
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${SERPAPI_KEY:-}" ]; then
+            echo "SERPAPI_KEY repository secret is missing."
+            exit 1
+          fi
+
+          mkdir -p _data
+
+          curl \
+            --fail \
+            --silent \
+            --show-error \
+            --get "https://serpapi.com/search.json" \
+            --data-urlencode "engine=google_scholar_author" \
+            --data-urlencode "author_id=B36kyxIAAAAJ" \
+            --data-urlencode "hl=en" \
+            --data-urlencode "api_key=${SERPAPI_KEY}" \
+            --output /tmp/scholar-response.json
+
+          python <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          response_path = Path("/tmp/scholar-response.json")
+          output_path = Path("_data/scholar.json")
+
+          with response_path.open(encoding="utf-8") as file:
+              response = json.load(file)
+
+          if "error" in response:
+              raise RuntimeError(
+                  f"SerpApi returned an error: {response['error']}"
+              )
+
+          rows = response.get("cited_by", {}).get("table", [])
+
+          metric_mapping = {
+              "citations": "total-cites",
+              "h_index": "h-index",
+              "i10_index": "i10-index",
+          }
+
+          metrics = {}
+
+          for row in rows:
+              for response_key, output_key in metric_mapping.items():
+                  metric = row.get(response_key)
+
+                  if isinstance(metric, dict) and metric.get("all") is not None:
+                      metrics[output_key] = int(metric["all"])
+
+          missing = [
+              output_key
+              for output_key in metric_mapping.values()
+              if output_key not in metrics
+          ]
+
+          if missing:
+              raise RuntimeError(
+                  "Missing Scholar metrics: " + ", ".join(missing)
+              )
+
+          metrics["updated-at"] = datetime.now(timezone.utc).isoformat()
+
+          output_path.write_text(
+              json.dumps(metrics, indent=2) + "\n",
+              encoding="utf-8",
+          )
+
+          print(json.dumps(metrics, indent=2))
+          PY
+
+      - name: Commit updated metrics
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add _data/scholar.json
+
+          if git diff --cached --quiet; then
+            echo "Google Scholar metrics have not changed."
+          else
+            git commit -m "Update Google Scholar metrics"
+            git push
+          fi
