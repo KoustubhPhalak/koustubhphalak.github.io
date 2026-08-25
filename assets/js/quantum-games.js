@@ -5,6 +5,8 @@
   const BOX = 2;
   const EMPTY = -1;
   const DEFAULT_EMPTY = 8;
+  const MAX_QUBITS = 14;
+  const QAOA_SHOTS = 2048;
 
   const cloneGrid = (grid) => grid.map((row) => [...row]);
 
@@ -17,18 +19,23 @@
     return a;
   }
 
-  function isPlacementValid(grid, row, col, value) {
-    if (grid[row].includes(value)) return false;
-    if (grid.some((r) => r[col] === value)) return false;
+  function isPlacementValid(grid, row, col, value, emptyValue = 0) {
+    for (let c = 0; c < SIZE; c += 1) {
+      if (c !== col && grid[row][c] === value) return false;
+    }
+    for (let r = 0; r < SIZE; r += 1) {
+      if (r !== row && grid[r][col] === value) return false;
+    }
 
     const boxRow = Math.floor(row / BOX) * BOX;
     const boxCol = Math.floor(col / BOX) * BOX;
     for (let r = boxRow; r < boxRow + BOX; r += 1) {
       for (let c = boxCol; c < boxCol + BOX; c += 1) {
-        if (grid[r][c] === value) return false;
+        if ((r !== row || c !== col) && grid[r][c] === value) return false;
       }
     }
-    return true;
+
+    return grid[row][col] === emptyValue || grid[row][col] === value;
   }
 
   function generateFullGrid() {
@@ -40,7 +47,7 @@
       const col = position % SIZE;
 
       for (const value of shuffled([1, 2, 3, 4])) {
-        if (!isPlacementValid(grid, row, col, value)) continue;
+        if (!isPlacementValid(grid, row, col, value, 0)) continue;
         grid[row][col] = value;
         if (fill(position + 1)) return true;
         grid[row][col] = 0;
@@ -52,45 +59,63 @@
     return grid;
   }
 
-  function generatePuzzle(numEmpty = DEFAULT_EMPTY) {
-    const solution = generateFullGrid();
-    const puzzle = cloneGrid(solution);
-    const positions = shuffled(
-      Array.from({ length: SIZE * SIZE }, (_, index) => index)
-    ).slice(0, numEmpty);
-
-    for (const position of positions) {
-      const row = Math.floor(position / SIZE);
-      const col = position % SIZE;
-      puzzle[row][col] = EMPTY;
+  function puzzleCandidates(grid, row, col) {
+    if (grid[row][col] !== EMPTY) return [];
+    const values = [];
+    for (let value = 1; value <= SIZE; value += 1) {
+      if (isPlacementValid(grid, row, col, value, EMPTY)) values.push(value);
     }
-
-    return { solution, puzzle };
+    return values;
   }
 
-  function candidatesFor(puzzle, row, col) {
-    if (puzzle[row][col] !== EMPTY) return [];
+  function countSolutions(puzzle, limit = 2) {
+    const grid = cloneGrid(puzzle);
+    let count = 0;
 
-    const forbidden = new Set();
-    for (let i = 0; i < SIZE; i += 1) {
-      if (puzzle[row][i] !== EMPTY) forbidden.add(puzzle[row][i]);
-      if (puzzle[i][col] !== EMPTY) forbidden.add(puzzle[i][col]);
-    }
+    function search() {
+      if (count >= limit) return;
 
-    const boxRow = Math.floor(row / BOX) * BOX;
-    const boxCol = Math.floor(col / BOX) * BOX;
-    for (let r = boxRow; r < boxRow + BOX; r += 1) {
-      for (let c = boxCol; c < boxCol + BOX; c += 1) {
-        if (puzzle[r][c] !== EMPTY) forbidden.add(puzzle[r][c]);
+      let bestRow = -1;
+      let bestCol = -1;
+      let bestCandidates = null;
+
+      for (let row = 0; row < SIZE; row += 1) {
+        for (let col = 0; col < SIZE; col += 1) {
+          if (grid[row][col] !== EMPTY) continue;
+          const candidates = puzzleCandidates(grid, row, col);
+          if (candidates.length === 0) return;
+          if (bestCandidates === null || candidates.length < bestCandidates.length) {
+            bestRow = row;
+            bestCol = col;
+            bestCandidates = candidates;
+          }
+        }
+      }
+
+      if (bestCandidates === null) {
+        count += 1;
+        return;
+      }
+
+      for (const value of bestCandidates) {
+        grid[bestRow][bestCol] = value;
+        search();
+        grid[bestRow][bestCol] = EMPTY;
+        if (count >= limit) return;
       }
     }
 
-    return [1, 2, 3, 4].filter((value) => !forbidden.has(value));
+    search();
+    return count;
   }
 
-  // Build the same reduced one-hot objective as the Python version:
-  // every still-undecided cell/value pair becomes a binary variable, and
-  // each Sudoku rule contributes an exactly-one penalty (sum(x)-1)^2.
+  function candidatesFor(puzzle, row, col) {
+    return puzzleCandidates(puzzle, row, col);
+  }
+
+  // Explicit upper-triangular QUBO convention:
+  // E(x) = offset + sum_i Q[i][i] x_i + sum_{i<j} Q[i][j] x_i x_j.
+  // Each exactly-one constraint contributes (sum x - 1)^2.
   function buildReducedQubo(puzzle) {
     const variables = [];
     const variableIndex = new Map();
@@ -106,12 +131,28 @@
       }
     }
 
+    const n = variables.length;
+    const Q = Array.from({ length: n }, () => Array(n).fill(0));
     const groups = [];
-    const addExactlyOne = (indices) => {
-      if (indices.length === 0) return;
-      let mask = 0;
-      for (const index of indices) mask |= (1 << index);
-      groups.push(mask >>> 0);
+    let offset = 0;
+    let infeasible = false;
+
+    const addExactlyOne = (indices, label) => {
+      if (indices.length === 0) {
+        infeasible = true;
+        return;
+      }
+
+      groups.push({ indices: [...indices], label });
+      offset += 1;
+
+      // (sum x - 1)^2 = 1 - sum_i x_i + 2 sum_{i<j} x_i x_j.
+      for (const i of indices) Q[i][i] -= 1;
+      for (let a = 0; a < indices.length; a += 1) {
+        for (let b = a + 1; b < indices.length; b += 1) {
+          Q[indices[a]][indices[b]] += 2;
+        }
+      }
     };
 
     // Exactly one candidate in every empty cell.
@@ -121,7 +162,7 @@
         const indices = variables
           .map((v, i) => (v.row === row && v.col === col ? i : -1))
           .filter((i) => i >= 0);
-        addExactlyOne(indices);
+        addExactlyOne(indices, `cell:${row},${col}`);
       }
     }
 
@@ -132,7 +173,7 @@
         const indices = variables
           .map((v, i) => (v.row === row && v.value === value ? i : -1))
           .filter((i) => i >= 0);
-        addExactlyOne(indices);
+        addExactlyOne(indices, `row:${row}:value:${value}`);
       }
     }
 
@@ -143,7 +184,7 @@
         const indices = variables
           .map((v, i) => (v.col === col && v.value === value ? i : -1))
           .filter((i) => i >= 0);
-        addExactlyOne(indices);
+        addExactlyOne(indices, `col:${col}:value:${value}`);
       }
     }
 
@@ -166,71 +207,81 @@
               v.col >= boxCol && v.col < boxCol + BOX
             ) ? i : -1)
             .filter((i) => i >= 0);
-          addExactlyOne(indices);
+          addExactlyOne(indices, `box:${boxRow},${boxCol}:value:${value}`);
         }
       }
     }
 
-    return { variables, groups, variableIndex };
-  }
+    // Convert the explicit QUBO into H_C = constant + sum h_i Z_i + sum J_ij Z_i Z_j
+    // using x_i = (1 - Z_i) / 2.
+    const h = Array(n).fill(0);
+    const J = [];
+    let isingConstant = offset;
 
-  function popcount32(value) {
-    value >>>= 0;
-    value -= (value >>> 1) & 0x55555555;
-    value = (value & 0x33333333) + ((value >>> 2) & 0x33333333);
-    return (((value + (value >>> 4)) & 0x0f0f0f0f) * 0x01010101) >>> 24;
-  }
-
-  function quboEnergy(state, groups) {
-    let energy = 0;
-    for (const mask of groups) {
-      const count = popcount32((state & mask) >>> 0);
-      const delta = count - 1;
-      energy += delta * delta;
-    }
-    return energy;
-  }
-
-  function solveReducedQubo(puzzle) {
-    const model = buildReducedQubo(puzzle);
-    const n = model.variables.length;
-
-    if (n === 0) {
-      return { board: cloneGrid(puzzle), energy: 0, numVariables: 0, statesChecked: 1 };
+    for (let i = 0; i < n; i += 1) {
+      const qii = Q[i][i];
+      isingConstant += qii / 2;
+      h[i] -= qii / 2;
     }
 
-    // With eight blanks in a valid random 4x4 puzzle this is normally 8–17
-    // variables, keeping exact browser minimization small enough to be interactive.
-    if (n > 25) {
-      throw new Error(`Reduced model has ${n} variables; generate a smaller puzzle.`);
-    }
-
-    const totalStates = 2 ** n;
-    let bestEnergy = Number.POSITIVE_INFINITY;
-    let bestState = 0;
-
-    for (let state = 0; state < totalStates; state += 1) {
-      const energy = quboEnergy(state, model.groups);
-      if (energy < bestEnergy) {
-        bestEnergy = energy;
-        bestState = state;
-        if (energy === 0) break;
+    for (let i = 0; i < n; i += 1) {
+      for (let j = i + 1; j < n; j += 1) {
+        const qij = Q[i][j];
+        if (qij === 0) continue;
+        isingConstant += qij / 4;
+        h[i] -= qij / 4;
+        h[j] -= qij / 4;
+        J.push({ i, j, coefficient: qij / 4 });
       }
     }
-
-    const board = cloneGrid(puzzle);
-    model.variables.forEach((variable, index) => {
-      if (((bestState >>> index) & 1) === 1) {
-        board[variable.row][variable.col] = variable.value;
-      }
-    });
 
     return {
-      board,
-      energy: bestEnergy,
-      numVariables: n,
-      statesChecked: totalStates,
+      variables,
+      variableIndex,
+      groups,
+      Q,
+      offset,
+      infeasible,
+      ising: { constant: isingConstant, h, J },
     };
+  }
+
+  function generatePuzzle(numEmpty = DEFAULT_EMPTY) {
+    // Keep the browser-QAOA instances small and unambiguous: exactly one Sudoku
+    // completion, eight blanks, and <= MAX_QUBITS active reduced-QUBO variables.
+    for (let attempt = 0; attempt < 500; attempt += 1) {
+      const fullGrid = generateFullGrid();
+      const puzzle = cloneGrid(fullGrid);
+      const positions = shuffled(
+        Array.from({ length: SIZE * SIZE }, (_, index) => index)
+      ).slice(0, numEmpty);
+
+      for (const position of positions) {
+        const row = Math.floor(position / SIZE);
+        const col = position % SIZE;
+        puzzle[row][col] = EMPTY;
+      }
+
+      const model = buildReducedQubo(puzzle);
+      if (!model.infeasible && model.variables.length <= MAX_QUBITS && countSolutions(puzzle, 2) === 1) {
+        // Deliberately return only the clues. The completed grid used to construct a
+        // guaranteed-solvable puzzle is not retained or used by Solve.
+        return puzzle;
+      }
+    }
+
+    throw new Error("Could not generate a compact unique puzzle. Please try Generate again.");
+  }
+
+  function decodeState(puzzle, variables, state) {
+    const board = cloneGrid(puzzle);
+    for (let index = 0; index < variables.length; index += 1) {
+      if ((state & (2 ** index)) !== 0) {
+        const variable = variables[index];
+        board[variable.row][variable.col] = variable.value;
+      }
+    }
+    return board;
   }
 
   function isCompleteValidSudoku(board) {
@@ -260,10 +311,18 @@
     const solveButton = root.querySelector("[data-solve]");
     const statusElement = root.querySelector("[data-status]");
     const qvarElement = root.querySelector("[data-qvar-count]");
-    const energyElement = root.querySelector("[data-energy]");
+    const exactEnergyElement = root.querySelector("[data-exact-energy]");
+    const qaoaEnergyElement = root.querySelector("[data-qaoa-energy]");
+    const groundProbabilityElement = root.querySelector("[data-ground-probability]");
+    const degeneracyElement = root.querySelector("[data-degeneracy]");
+    const angleElement = root.querySelector("[data-angles]");
+    const sampleListElement = root.querySelector("[data-samples]");
 
     let puzzle;
+    let model;
     let shownBoard;
+    let worker = null;
+    let generationId = 0;
 
     function render(board, solved = false) {
       boardElement.replaceChildren();
@@ -283,51 +342,136 @@
           cell.textContent = value === EMPTY ? "" : String(value);
           cell.setAttribute(
             "aria-label",
-            value === EMPTY ? `Row ${row + 1}, column ${col + 1}, empty` : `Row ${row + 1}, column ${col + 1}, ${value}`
+            value === EMPTY
+              ? `Row ${row + 1}, column ${col + 1}, empty`
+              : `Row ${row + 1}, column ${col + 1}, ${value}`
           );
           boardElement.appendChild(cell);
         }
       }
     }
 
+    function clearQuantumMetrics() {
+      exactEnergyElement.textContent = "—";
+      qaoaEnergyElement.textContent = "—";
+      groundProbabilityElement.textContent = "—";
+      degeneracyElement.textContent = "—";
+      angleElement.textContent = "—";
+      sampleListElement.replaceChildren();
+      const li = document.createElement("li");
+      li.textContent = "Run QAOA to see measured states.";
+      sampleListElement.appendChild(li);
+    }
+
+    function stopWorker() {
+      if (worker) {
+        worker.terminate();
+        worker = null;
+      }
+    }
+
     function newPuzzle() {
-      const generated = generatePuzzle(DEFAULT_EMPTY);
-      puzzle = generated.puzzle;
-      shownBoard = cloneGrid(puzzle);
-      const model = buildReducedQubo(puzzle);
-      qvarElement.textContent = String(model.variables.length);
-      energyElement.textContent = "—";
-      statusElement.textContent = "New randomized puzzle generated.";
-      render(shownBoard, false);
+      stopWorker();
+      generationId += 1;
+      try {
+        puzzle = generatePuzzle(DEFAULT_EMPTY);
+        shownBoard = cloneGrid(puzzle);
+        model = buildReducedQubo(puzzle);
+        qvarElement.textContent = String(model.variables.length);
+        clearQuantumMetrics();
+        statusElement.textContent = "New unique randomized puzzle generated. Ready for QAOA.";
+        render(shownBoard, false);
+      } catch (error) {
+        statusElement.textContent = error.message;
+      }
+    }
+
+    function renderSamples(samples) {
+      sampleListElement.replaceChildren();
+      for (const sample of samples) {
+        const li = document.createElement("li");
+        const bitstring = sample.bitstring.padStart(model.variables.length, "0");
+        li.innerHTML = `<code>${bitstring}</code><span>E=${sample.energy}</span><span>${sample.count} shots</span>`;
+        sampleListElement.appendChild(li);
+      }
     }
 
     function solve() {
+      if (!model || model.infeasible) {
+        statusElement.textContent = "This puzzle does not have a valid reduced QUBO model.";
+        return;
+      }
+
+      stopWorker();
+      const runId = generationId;
       solveButton.disabled = true;
       generateButton.disabled = true;
-      solveButton.textContent = "Solving…";
-      statusElement.textContent = "Searching the reduced QUBO energy landscape…";
+      solveButton.textContent = "Running QAOA…";
+      statusElement.textContent = "Building exact reference energies and optimizing QAOA angles…";
+      clearQuantumMetrics();
 
-      // Let the UI paint before doing the small exhaustive search.
-      window.setTimeout(() => {
-        try {
-          const result = solveReducedQubo(puzzle);
-          shownBoard = result.board;
-          const valid = result.energy === 0 && isCompleteValidSudoku(result.board);
+      const workerUrl = root.dataset.workerUrl;
+      worker = new Worker(workerUrl);
 
-          qvarElement.textContent = String(result.numVariables);
-          energyElement.textContent = String(result.energy);
-          statusElement.textContent = valid
-            ? `Ground state found. Valid Sudoku solution.`
-            : `Best state has energy ${result.energy}; no valid ground state was decoded.`;
+      worker.onmessage = (event) => {
+        if (runId !== generationId) return;
+        const message = event.data;
+
+        if (message.type === "progress") {
+          statusElement.textContent = message.message;
+          return;
+        }
+
+        if (message.type === "result") {
+          const result = message.result;
+          shownBoard = decodeState(puzzle, model.variables, result.bestSampleState);
+          const valid = result.bestSampleEnergy === result.exactGroundEnergy && isCompleteValidSudoku(shownBoard);
+
+          exactEnergyElement.textContent = String(result.exactGroundEnergy);
+          qaoaEnergyElement.textContent = String(result.bestSampleEnergy);
+          groundProbabilityElement.textContent = `${(result.groundProbability * 100).toFixed(2)}%`;
+          degeneracyElement.textContent = String(result.groundStateCount);
+          angleElement.textContent = `γ=${result.gamma.toFixed(3)}, β=${result.beta.toFixed(3)}`;
+          renderSamples(result.topSamples);
           render(shownBoard, valid);
-        } catch (error) {
-          statusElement.textContent = error.message;
-        } finally {
+
+          statusElement.textContent = valid
+            ? `QAOA sampled the exact ground state using ${result.shots} shots.`
+            : `QAOA's best measured state had energy ${result.bestSampleEnergy}; try Solve again or Generate a new puzzle.`;
+
           solveButton.disabled = false;
           generateButton.disabled = false;
-          solveButton.textContent = "Solve";
+          solveButton.textContent = "Solve with QAOA";
+          stopWorker();
+          return;
         }
-      }, 30);
+
+        if (message.type === "error") {
+          statusElement.textContent = message.message;
+          solveButton.disabled = false;
+          generateButton.disabled = false;
+          solveButton.textContent = "Solve with QAOA";
+          stopWorker();
+        }
+      };
+
+      worker.onerror = (event) => {
+        statusElement.textContent = `QAOA worker failed: ${event.message}`;
+        solveButton.disabled = false;
+        generateButton.disabled = false;
+        solveButton.textContent = "Solve with QAOA";
+        stopWorker();
+      };
+
+      worker.postMessage({
+        type: "solve",
+        payload: {
+          Q: model.Q,
+          offset: model.offset,
+          shots: QAOA_SHOTS,
+          depth: 1,
+        },
+      });
     }
 
     generateButton.addEventListener("click", newPuzzle);
@@ -335,7 +479,13 @@
     newPuzzle();
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  function initialize() {
     document.querySelectorAll("[data-quantum-sudoku]").forEach(initQuantumSudoku);
-  });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initialize, { once: true });
+  } else {
+    initialize();
+  }
 })();
