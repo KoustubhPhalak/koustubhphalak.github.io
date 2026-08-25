@@ -1,0 +1,66 @@
+<link rel="stylesheet" href="{{ '/assets/css/quantum-games.css' | relative_url }}">
+
+<section class="quantum-games" id="quantum-games" aria-labelledby="quantum-games-title">
+  <div class="quantum-games__heading">
+    <div>
+      <p class="quantum-games__eyebrow">Interactive experiments</p>
+      <h2 id="quantum-games-title">Available Games</h2>
+    </div>
+    <p class="quantum-games__intro">
+      Small interactive puzzles that turn quantum-computing ideas into something you can play with.
+    </p>
+  </div>
+
+  <div class="quantum-games__grid">
+    <article class="quantum-game-card" data-quantum-sudoku>
+      <div class="quantum-game-card__topline">
+        <div>
+          <span class="quantum-game-card__tag">QUBO • Optimization</span>
+          <h3>Quantum Sudoku</h3>
+        </div>
+        <span class="quantum-game-card__badge" aria-label="4 by 4 Sudoku">4×4</span>
+      </div>
+
+      <p class="quantum-game-card__description">
+        A Sudoku encoded as an energy-minimization problem. Generate a puzzle, then find the
+        ground state of the same reduced QUBO objective used by the quantum solver.
+      </p>
+
+      <div class="quantum-sudoku__workspace">
+        <div class="quantum-sudoku__board-wrap">
+          <div class="quantum-sudoku__board" role="grid" aria-label="Quantum Sudoku puzzle"></div>
+        </div>
+
+        <div class="quantum-sudoku__panel">
+          <div class="quantum-sudoku__metric">
+            <span>Active variables</span>
+            <strong data-qvar-count>—</strong>
+          </div>
+          <div class="quantum-sudoku__metric">
+            <span>Ground-state energy</span>
+            <strong data-energy>—</strong>
+          </div>
+          <p class="quantum-sudoku__status" data-status aria-live="polite">
+            Ready. Generate a puzzle or solve this one.
+          </p>
+        </div>
+      </div>
+
+      <div class="quantum-game-card__actions">
+        <button class="quantum-game-button quantum-game-button--secondary" type="button" data-generate>
+          Generate
+        </button>
+        <button class="quantum-game-button quantum-game-button--primary" type="button" data-solve>
+          Solve
+        </button>
+      </div>
+
+      <p class="quantum-game-card__note">
+        Browser demo: the QUBO ground state is minimized exactly so this static GitHub Pages site
+        stays fast and dependency-free. The PennyLane/QAOA implementation uses the same objective.
+      </p>
+    </article>
+  </div>
+</section>
+
+<script src="{{ '/assets/js/quantum-games.js' | relative_url }}" defer></script>

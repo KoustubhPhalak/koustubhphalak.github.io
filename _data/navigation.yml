@@ -2,7 +2,7 @@
 main:
   - title: "Resume/CV"
     url: /resume/
-  
+
   - title: "Research Timeline"
     url: /research-timeline/
 
@@ -10,19 +10,22 @@ main:
     url: /publications/
 
   - title: "Projects"
-    url: /projects/    
+    url: /projects/
+
+  - title: "Quantum Games"
+    url: /quantum-games/
 
   - title: "Miscellaneous"
-    url: /miscellaneous/    
-    
+    url: /miscellaneous/
+
   # - title: "Portfolio"
   #   url: /portfolio/
-        
+
   # - title: "Blog Posts"
   #   url: /year-archive/
-    
+
   # - title: "CV"
   #   url: /cv/
-    
+
   # - title: "Guide"
   #   url: /markdown/

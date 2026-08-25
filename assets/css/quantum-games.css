@@ -1,0 +1,259 @@
+.quantum-games {
+  margin: 3rem 0 2rem;
+}
+
+.quantum-games__heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 1.25rem;
+}
+
+.quantum-games__heading h2 {
+  margin: 0;
+}
+
+.quantum-games__eyebrow {
+  margin: 0 0 0.35rem;
+  color: #5b57d1;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.quantum-games__intro {
+  max-width: 32rem;
+  margin: 0;
+  color: #687078;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.quantum-games__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 315px), 1fr));
+  gap: 1.25rem;
+}
+
+.quantum-game-card {
+  position: relative;
+  overflow: hidden;
+  padding: 1.35rem;
+  border: 1px solid rgba(68, 76, 231, 0.16);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(91, 87, 209, 0.12), transparent 34%),
+    linear-gradient(145deg, #ffffff 0%, #fbfbff 100%);
+  box-shadow: 0 14px 36px rgba(30, 38, 70, 0.08);
+}
+
+.quantum-game-card__topline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.quantum-game-card__tag {
+  display: inline-block;
+  margin-bottom: 0.4rem;
+  color: #5b57d1;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.quantum-game-card h3 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.quantum-game-card__badge {
+  display: inline-grid;
+  min-width: 2.6rem;
+  height: 2.1rem;
+  place-items: center;
+  border: 1px solid rgba(91, 87, 209, 0.2);
+  border-radius: 999px;
+  background: rgba(91, 87, 209, 0.08);
+  color: #4743ba;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.quantum-game-card__description {
+  margin: 0.8rem 0 1.1rem;
+  color: #555e68;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.quantum-sudoku__workspace {
+  display: grid;
+  grid-template-columns: minmax(180px, 235px) 1fr;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.quantum-sudoku__board-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantum-sudoku__board {
+  display: grid;
+  width: min(100%, 235px);
+  aspect-ratio: 1;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  border: 2px solid #2e3440;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.quantum-sudoku__cell {
+  display: grid;
+  place-items: center;
+  border-right: 1px solid #cfd3da;
+  border-bottom: 1px solid #cfd3da;
+  background: #fff;
+  color: #272d35;
+  font-size: clamp(1rem, 2.7vw, 1.35rem);
+  font-weight: 650;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.quantum-sudoku__cell:nth-child(4n) {
+  border-right: 0;
+}
+
+.quantum-sudoku__cell:nth-child(n+13) {
+  border-bottom: 0;
+}
+
+.quantum-sudoku__cell:nth-child(4n+2) {
+  border-right: 2px solid #2e3440;
+}
+
+.quantum-sudoku__cell:nth-child(n+5):nth-child(-n+8) {
+  border-bottom: 2px solid #2e3440;
+}
+
+.quantum-sudoku__cell--clue {
+  background: #f4f5f8;
+  color: #20252b;
+}
+
+.quantum-sudoku__cell--solved {
+  background: #eeedff;
+  color: #4541bd;
+  animation: quantum-cell-pop 260ms ease both;
+}
+
+@keyframes quantum-cell-pop {
+  0% { transform: scale(0.86); opacity: 0.3; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.quantum-sudoku__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.85rem;
+  border: 1px solid #eceef3;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.quantum-sudoku__metric {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid #eceef3;
+  color: #737b84;
+  font-size: 0.72rem;
+}
+
+.quantum-sudoku__metric strong {
+  color: #303741;
+  font-size: 0.9rem;
+}
+
+.quantum-sudoku__status {
+  margin: auto 0 0;
+  color: #59616b;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.quantum-game-card__actions {
+  display: flex;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.quantum-game-button {
+  appearance: none;
+  flex: 1;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 0.68rem 0.9rem;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  transition: transform 150ms ease, box-shadow 150ms ease, opacity 150ms ease;
+}
+
+.quantum-game-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.quantum-game-button:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+
+.quantum-game-button--primary {
+  background: #5753cf;
+  color: #fff;
+  box-shadow: 0 7px 18px rgba(87, 83, 207, 0.2);
+}
+
+.quantum-game-button--secondary {
+  border-color: #d9dce4;
+  background: #fff;
+  color: #343b44;
+}
+
+.quantum-game-card__note {
+  margin: 0.8rem 0 0;
+  color: #858b92;
+  font-size: 0.66rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 720px) {
+  .quantum-games__heading {
+    display: block;
+  }
+
+  .quantum-games__intro {
+    margin-top: 0.6rem;
+  }
+
+  .quantum-sudoku__workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .quantum-sudoku__board {
+    width: min(100%, 270px);
+  }
+}
