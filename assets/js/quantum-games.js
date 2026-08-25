@@ -7,6 +7,7 @@
   const DEFAULT_EMPTY = 8;
   const MAX_QUBITS = 14;
   const QAOA_SHOTS = 2048;
+  const SCRIPT_URL = document.currentScript?.src || "";
 
   const cloneGrid = (grid) => grid.map((row) => [...row]);
 
@@ -318,6 +319,13 @@
     const angleElement = root.querySelector("[data-angles]");
     const sampleListElement = root.querySelector("[data-samples]");
 
+    // These are the only elements required for the game to function.
+    // Metrics/details are optional so older HTML includes remain compatible.
+    if (!boardElement || !generateButton || !solveButton) {
+      console.error("Quantum Sudoku could not initialize: board or action buttons are missing.", root);
+      return;
+    }
+
     let puzzle;
     let model;
     let shownBoard;
@@ -351,16 +359,23 @@
       }
     }
 
+    function setText(element, value) {
+      if (element) element.textContent = value;
+    }
+
     function clearQuantumMetrics() {
-      exactEnergyElement.textContent = "—";
-      qaoaEnergyElement.textContent = "—";
-      groundProbabilityElement.textContent = "—";
-      degeneracyElement.textContent = "—";
-      angleElement.textContent = "—";
-      sampleListElement.replaceChildren();
-      const li = document.createElement("li");
-      li.textContent = "Run QAOA to see measured states.";
-      sampleListElement.appendChild(li);
+      setText(exactEnergyElement, "—");
+      setText(qaoaEnergyElement, "—");
+      setText(groundProbabilityElement, "—");
+      setText(degeneracyElement, "—");
+      setText(angleElement, "—");
+
+      if (sampleListElement) {
+        sampleListElement.replaceChildren();
+        const li = document.createElement("li");
+        li.textContent = "Run QAOA to see measured states.";
+        sampleListElement.appendChild(li);
+      }
     }
 
     function stopWorker() {
@@ -377,16 +392,17 @@
         puzzle = generatePuzzle(DEFAULT_EMPTY);
         shownBoard = cloneGrid(puzzle);
         model = buildReducedQubo(puzzle);
-        qvarElement.textContent = String(model.variables.length);
+        setText(qvarElement, String(model.variables.length));
         clearQuantumMetrics();
-        statusElement.textContent = "New unique randomized puzzle generated. Ready for QAOA.";
+        setText(statusElement, "New unique randomized puzzle generated. Ready for QAOA.");
         render(shownBoard, false);
       } catch (error) {
-        statusElement.textContent = error.message;
+        setText(statusElement, error.message);
       }
     }
 
     function renderSamples(samples) {
+      if (!sampleListElement) return;
       sampleListElement.replaceChildren();
       for (const sample of samples) {
         const li = document.createElement("li");
@@ -398,7 +414,7 @@
 
     function solve() {
       if (!model || model.infeasible) {
-        statusElement.textContent = "This puzzle does not have a valid reduced QUBO model.";
+        setText(statusElement, "This puzzle does not have a valid reduced QUBO model.");
         return;
       }
 
@@ -407,10 +423,20 @@
       solveButton.disabled = true;
       generateButton.disabled = true;
       solveButton.textContent = "Running QAOA…";
-      statusElement.textContent = "Building exact reference energies and optimizing QAOA angles…";
+      setText(statusElement, "Building exact reference energies and optimizing QAOA angles…");
       clearQuantumMetrics();
 
-      const workerUrl = root.dataset.workerUrl;
+      let workerUrl = root.dataset.workerUrl;
+      if (!workerUrl && SCRIPT_URL) {
+        workerUrl = new URL("quantum-sudoku-worker.js", SCRIPT_URL).href;
+      }
+      if (!workerUrl) {
+        setText(statusElement, "Cannot locate quantum-sudoku-worker.js. Make sure both JavaScript files are in assets/js/.");
+        solveButton.disabled = false;
+        generateButton.disabled = false;
+        solveButton.textContent = "Solve with QAOA";
+        return;
+      }
       worker = new Worker(workerUrl);
 
       worker.onmessage = (event) => {
@@ -418,7 +444,7 @@
         const message = event.data;
 
         if (message.type === "progress") {
-          statusElement.textContent = message.message;
+          setText(statusElement, message.message);
           return;
         }
 
@@ -427,17 +453,20 @@
           shownBoard = decodeState(puzzle, model.variables, result.bestSampleState);
           const valid = result.bestSampleEnergy === result.exactGroundEnergy && isCompleteValidSudoku(shownBoard);
 
-          exactEnergyElement.textContent = String(result.exactGroundEnergy);
-          qaoaEnergyElement.textContent = String(result.bestSampleEnergy);
-          groundProbabilityElement.textContent = `${(result.groundProbability * 100).toFixed(2)}%`;
-          degeneracyElement.textContent = String(result.groundStateCount);
-          angleElement.textContent = `γ=${result.gamma.toFixed(3)}, β=${result.beta.toFixed(3)}`;
+          setText(exactEnergyElement, String(result.exactGroundEnergy));
+          setText(qaoaEnergyElement, String(result.bestSampleEnergy));
+          setText(groundProbabilityElement, `${(result.groundProbability * 100).toFixed(2)}%`);
+          setText(degeneracyElement, String(result.groundStateCount));
+          setText(angleElement, `γ=${result.gamma.toFixed(3)}, β=${result.beta.toFixed(3)}`);
           renderSamples(result.topSamples);
           render(shownBoard, valid);
 
-          statusElement.textContent = valid
-            ? `QAOA sampled the exact ground state using ${result.shots} shots.`
-            : `QAOA's best measured state had energy ${result.bestSampleEnergy}; try Solve again or Generate a new puzzle.`;
+          setText(
+            statusElement,
+            valid
+              ? `QAOA sampled the exact ground state using ${result.shots} shots.`
+              : `QAOA's best measured state had energy ${result.bestSampleEnergy}; try Solve again or Generate a new puzzle.`
+          );
 
           solveButton.disabled = false;
           generateButton.disabled = false;
@@ -447,7 +476,7 @@
         }
 
         if (message.type === "error") {
-          statusElement.textContent = message.message;
+          setText(statusElement, message.message);
           solveButton.disabled = false;
           generateButton.disabled = false;
           solveButton.textContent = "Solve with QAOA";
@@ -456,7 +485,7 @@
       };
 
       worker.onerror = (event) => {
-        statusElement.textContent = `QAOA worker failed: ${event.message}`;
+        setText(statusElement, `QAOA worker failed: ${event.message}`);
         solveButton.disabled = false;
         generateButton.disabled = false;
         solveButton.textContent = "Solve with QAOA";
