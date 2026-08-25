@@ -1,0 +1,186 @@
+/* Keep Quantum Games as a vertical stack.  The base stylesheet uses an
+   auto-fit grid, which places multiple game cards side-by-side on wide screens. */
+.quantum-games__grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.quantum-games__grid > .quantum-game-card {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* The shared stylesheet uses cursor: wait for every disabled game button.
+   For Grover, disabled means the measured run has ended, not that work is busy. */
+.quantum-grover .quantum-game-button:disabled {
+  cursor: not-allowed;
+}
+
+.quantum-grover__circuit {
+  display: flex;
+  align-items: center;
+  gap: 0.38rem;
+  margin: 0 0 1rem;
+  padding: 0.52rem 0.65rem;
+  overflow-x: auto;
+  border: 1px solid #eceef3;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.74);
+  color: #555e68;
+  font-size: 0.66rem;
+  white-space: nowrap;
+}
+
+.quantum-grover__circuit span:not(.quantum-grover__arrow) {
+  padding: 0.25rem 0.42rem;
+  border-radius: 6px;
+  background: #f3f2ff;
+  color: #4743ba;
+  font-weight: 700;
+}
+
+.quantum-grover__arrow {
+  color: #9a9fa7;
+}
+
+.quantum-grover__workspace {
+  display: grid;
+  grid-template-columns: minmax(220px, 270px) 1fr;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.quantum-grover__board {
+  display: grid;
+  width: min(100%, 270px);
+  aspect-ratio: 1;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 0.35rem;
+}
+
+.quantum-grover__tile {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  min-width: 0;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid #dfe2e8;
+  border-radius: 10px;
+  background: #fff;
+  color: #303741;
+  box-shadow: 0 4px 10px rgba(38, 44, 62, 0.045);
+  transition: transform 170ms ease, border-color 170ms ease, box-shadow 170ms ease;
+}
+
+.quantum-grover__probability-fill {
+  position: absolute;
+  z-index: -1;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 6.25%;
+  background: linear-gradient(180deg, rgba(91, 87, 209, 0.11), rgba(91, 87, 209, 0.3));
+  transition: height 420ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.quantum-grover__mystery {
+  margin-top: 0.15rem;
+  font-size: clamp(1rem, 2.6vw, 1.35rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.quantum-grover__basis {
+  color: #606874;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: clamp(0.43rem, 1vw, 0.57rem);
+  line-height: 1;
+}
+
+.quantum-grover__probability {
+  color: #858b92;
+  font-size: clamp(0.42rem, 0.9vw, 0.54rem);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.quantum-grover__tile--measured {
+  transform: scale(1.025);
+  border-color: #8c89dc;
+  box-shadow: 0 7px 18px rgba(87, 83, 207, 0.17);
+}
+
+.quantum-grover__tile--treasure {
+  border-color: #726ed2;
+  background: #f4f3ff;
+}
+
+.quantum-grover__tile--miss {
+  border-color: #c9cdd5;
+  background: #f7f8fa;
+}
+
+.quantum-grover__view-note {
+  max-width: 270px;
+  margin: 0.48rem 0 0;
+  color: #92979e;
+  font-size: 0.58rem;
+  line-height: 1.4;
+}
+
+.quantum-grover__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.85rem;
+  border: 1px solid #eceef3;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.quantum-grover__metric {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.48rem;
+  border-bottom: 1px solid #eceef3;
+  color: #737b84;
+  font-size: 0.7rem;
+}
+
+.quantum-grover__metric strong {
+  color: #303741;
+  font-size: 0.84rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.quantum-grover__status {
+  margin: auto 0 0;
+  color: #59616b;
+  font-size: 0.73rem;
+  line-height: 1.45;
+}
+
+.quantum-grover__actions {
+  flex-wrap: wrap;
+}
+
+.quantum-grover__actions .quantum-game-button {
+  min-width: 100px;
+}
+
+@media (max-width: 720px) {
+  .quantum-grover__workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .quantum-grover__board,
+  .quantum-grover__view-note {
+    width: min(100%, 290px);
+    max-width: 290px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+}

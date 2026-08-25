@@ -1,0 +1,80 @@
+<link rel="stylesheet" href="{{ '/assets/css/grovers-treasure-hunt.css' | relative_url }}">
+
+<template id="grovers-treasure-hunt-template">
+  <article class="quantum-game-card quantum-grover" data-grover-hunt>
+    <div class="quantum-game-card__topline">
+      <div>
+        <span class="quantum-game-card__tag">Grover • Quantum Search</span>
+        <h3>Grover's Treasure Hunt</h3>
+      </div>
+      <span class="quantum-game-card__badge" aria-label="Four-qubit search">4 qubits</span>
+    </div>
+
+    <p class="quantum-game-card__description">
+      A treasure is hidden in one of 16 basis states. Start from an equal superposition,
+      amplify the marked state with Grover iterations, then measure the 4-qubit register.
+    </p>
+
+    <div class="quantum-grover__circuit" aria-label="Grover circuit stages">
+      <span>|0000⟩</span>
+      <span class="quantum-grover__arrow">→</span>
+      <span>H<sup>⊗4</sup></span>
+      <span class="quantum-grover__arrow">→</span>
+      <span>Oracle</span>
+      <span class="quantum-grover__arrow">→</span>
+      <span>Diffusion</span>
+      <span class="quantum-grover__arrow">→</span>
+      <span>Measure</span>
+    </div>
+
+    <div class="quantum-grover__workspace">
+      <div>
+        <div class="quantum-grover__board" role="grid" aria-label="Sixteen possible treasure locations" data-grover-board></div>
+        <p class="quantum-grover__view-note">
+          Bar height shows simulator probability. These amplitudes are not directly observable on real hardware.
+        </p>
+      </div>
+
+      <div class="quantum-grover__panel">
+        <div class="quantum-grover__metric">
+          <span>Grover iterations</span>
+          <strong data-grover-iteration>0 / 3 optimal</strong>
+        </div>
+        <div class="quantum-grover__metric">
+          <span>P(treasure)</span>
+          <strong data-grover-success>6.25%</strong>
+        </div>
+        <div class="quantum-grover__metric">
+          <span>Oracle calls</span>
+          <strong data-grover-oracles>0</strong>
+        </div>
+        <div class="quantum-grover__metric">
+          <span>Classical avg. queries</span>
+          <strong>8.5</strong>
+        </div>
+        <p class="quantum-grover__status" data-grover-status aria-live="polite">
+          A new oracle is ready. The treasure is equally likely to be in any of 16 states.
+        </p>
+      </div>
+    </div>
+
+    <div class="quantum-game-card__actions quantum-grover__actions">
+      <button class="quantum-game-button quantum-game-button--secondary" type="button" data-grover-generate>
+        Generate
+      </button>
+      <button class="quantum-game-button quantum-game-button--secondary" type="button" data-grover-step>
+        Grover Step
+      </button>
+      <button class="quantum-game-button quantum-game-button--primary" type="button" data-grover-measure>
+        Measure
+      </button>
+    </div>
+
+    <p class="quantum-game-card__note">
+      Genuine 4-qubit statevector simulation: each step phase-flips the oracle-marked basis state,
+      then applies inversion about the mean. Measurement is sampled from the resulting |amplitude|² distribution.
+    </p>
+  </article>
+</template>
+
+<script src="{{ '/assets/js/grovers-treasure-hunt.js' | relative_url }}" defer></script>
