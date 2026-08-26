@@ -10,6 +10,9 @@
   const EXACT_ONE_WEIGHT = 2;
   const BORDER_WEIGHT = 1;
   const SHOTS = 2048;
+  const REGION_FILLS = ["#6f6bd8", "#42a98d", "#dc8b4d"];
+  const REGION_NEUTRAL_FILL = "#eceef5";
+  const REGION_INVALID_FILL = "#d9dce4";
 
   function secureRandomUnit() {
     if (window.crypto && window.crypto.getRandomValues) {
@@ -416,6 +419,14 @@
         const color = colors[region];
         if (color !== null) path.classList.add(`quantum-map__region--color-${color}`);
         if (invalidRegions.has(region)) path.classList.add("quantum-map__region--invalid");
+
+        // Write the SVG fill inline (with !important) so the surrounding Jekyll/theme
+        // stylesheet cannot override the game state. Some AcademicPages/browser SVG
+        // rules are loaded after this component stylesheet.
+        const fill = invalidRegions.has(region)
+          ? REGION_INVALID_FILL
+          : (color === null ? REGION_NEUTRAL_FILL : REGION_FILLS[color]);
+        path.style.setProperty("fill", fill, "important");
 
         path.setAttribute(
           "aria-label",

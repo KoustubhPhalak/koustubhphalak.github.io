@@ -104,6 +104,20 @@
   stroke-width: 0.8;
   vector-effect: non-scaling-stroke;
   transition: fill 150ms ease, filter 150ms ease, opacity 150ms ease;
+  /* Browser/theme focus rings on SVG paths can render as a huge rounded
+     rectangle around the path bounding box. Use an SVG-native focus style. */
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.quantum-map__region:focus,
+.quantum-map__region:focus-visible {
+  outline: none !important;
+}
+
+.quantum-map__region:focus-visible {
+  stroke: rgba(48, 55, 65, 0.72);
+  stroke-width: 2;
 }
 
 .quantum-map__region:hover {
@@ -115,12 +129,12 @@
  * The old stylesheet defined the color classes earlier with equal specificity,
  * so the later neutral fill won the cascade and every region stayed gray.
  */
-.quantum-map__region.quantum-map__region--color-0 { fill: #6f6bd8; }
-.quantum-map__region.quantum-map__region--color-1 { fill: #42a98d; }
-.quantum-map__region.quantum-map__region--color-2 { fill: #dc8b4d; }
+.quantum-map__region.quantum-map__region--color-0 { fill: #6f6bd8 !important; }
+.quantum-map__region.quantum-map__region--color-1 { fill: #42a98d !important; }
+.quantum-map__region.quantum-map__region--color-2 { fill: #dc8b4d !important; }
 
 .quantum-map__region.quantum-map__region--invalid {
-  fill: #d9dce4;
+  fill: #d9dce4 !important;
 }
 
 .quantum-map__edge {
