@@ -1,0 +1,113 @@
+<link rel="stylesheet" href="{{ '/assets/css/quantum-maze-runner.css' | relative_url }}">
+
+<template id="quantum-maze-runner-template">
+  <article class="quantum-game-card quantum-maze" data-quantum-maze-runner>
+    <div class="quantum-game-card__topline">
+      <div>
+        <span class="quantum-game-card__tag">Quantum Walk • Interference</span>
+        <h3>Quantum Maze Runner</h3>
+      </div>
+      <span class="quantum-game-card__badge" aria-label="Seven by seven maze">7×7</span>
+    </div>
+
+    <p class="quantum-game-card__description">
+      Put a classical random walker and a discrete-time quantum walker in the same maze.
+      The classical agent follows one random trajectory; the quantum walk evolves coherent
+      amplitudes over many positions, where paths can reinforce or cancel through interference.
+    </p>
+
+    <div class="quantum-maze__rulebar" aria-label="Walk rules">
+      <span><strong>Classical</strong> random N/E/S/W move</span>
+      <span class="quantum-maze__rule-arrow">vs.</span>
+      <span><strong>Quantum</strong> Grover coin → unitary shift</span>
+      <span class="quantum-maze__route">Shortest route: <strong data-maze-shortest>—</strong></span>
+    </div>
+
+    <div class="quantum-maze__agents">
+      <section class="quantum-maze__agent" aria-labelledby="classical-maze-title">
+        <div class="quantum-maze__agent-heading">
+          <div>
+            <span class="quantum-maze__agent-kicker">One trajectory</span>
+            <h4 id="classical-maze-title">Classical Drunkard</h4>
+          </div>
+          <span class="quantum-maze__agent-chip">Random walk</span>
+        </div>
+
+        <div class="quantum-maze__board" data-classical-maze role="grid" aria-label="Classical random walk maze"></div>
+
+        <div class="quantum-maze__metrics">
+          <div class="quantum-maze__metric">
+            <span>Current position</span>
+            <strong data-classical-position>Start</strong>
+          </div>
+          <div class="quantum-maze__metric">
+            <span>Unique cells visited</span>
+            <strong data-classical-visited>1</strong>
+          </div>
+          <div class="quantum-maze__metric">
+            <span>First reached exit</span>
+            <strong data-classical-hit>Not yet</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="quantum-maze__agent" aria-labelledby="quantum-maze-title">
+        <div class="quantum-maze__agent-heading">
+          <div>
+            <span class="quantum-maze__agent-kicker">Coherent distribution</span>
+            <h4 id="quantum-maze-title">Quantum Wanderer</h4>
+          </div>
+          <span class="quantum-maze__agent-chip">DTQW</span>
+        </div>
+
+        <div class="quantum-maze__board quantum-maze__board--quantum" data-quantum-maze role="grid" aria-label="Discrete-time quantum walk maze"></div>
+
+        <div class="quantum-maze__metrics">
+          <div class="quantum-maze__metric">
+            <span>P(exit)</span>
+            <strong data-quantum-exit>0.00%</strong>
+          </div>
+          <div class="quantum-maze__metric">
+            <span>Peak position probability</span>
+            <strong data-quantum-peak>100.00%</strong>
+          </div>
+          <div class="quantum-maze__metric">
+            <span>State norm</span>
+            <strong data-quantum-norm>1.000000</strong>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="quantum-maze__footer-row">
+      <p class="quantum-maze__status" data-maze-status aria-live="polite">
+        Both walkers are at Start. Step them through the same maze and compare their behavior.
+      </p>
+      <div class="quantum-maze__step-counter">Step <strong data-maze-step>0</strong></div>
+    </div>
+
+    <div class="quantum-game-card__actions quantum-maze__actions">
+      <button class="quantum-game-button quantum-game-button--secondary" type="button" data-maze-generate>
+        New Maze
+      </button>
+      <button class="quantum-game-button quantum-game-button--secondary" type="button" data-maze-reset>
+        Reset Walkers
+      </button>
+      <button class="quantum-game-button quantum-game-button--primary" type="button" data-maze-step-button>
+        Step Both
+      </button>
+      <button class="quantum-game-button quantum-game-button--secondary" type="button" data-maze-measure>
+        Measure Quantum
+      </button>
+    </div>
+
+    <p class="quantum-game-card__note">
+      Genuine coined quantum-walk simulation. Each open position carries four directional coin amplitudes.
+      A step applies the 4-state Grover coin G = 2|s⟩⟨s| − I, then a flip-flop unitary shift along open edges;
+      blocked directions act as self-loops. The heatmap exposes simulator probabilities for learning—on hardware,
+      those probabilities would be estimated from repeated measurements.
+    </p>
+  </article>
+</template>
+
+<script src="{{ '/assets/js/quantum-maze-runner.js' | relative_url }}" defer></script>
