@@ -1,0 +1,108 @@
+<link rel="stylesheet" href="{{ '/assets/css/quantum-map-colorer.css' | relative_url }}">
+
+<template id="quantum-map-colorer-template">
+  <article class="quantum-game-card quantum-map" data-quantum-map-colorer
+           data-worker-url="{{ '/assets/js/quantum-map-colorer-worker.js' | relative_url }}">
+    <div class="quantum-game-card__topline">
+      <div>
+        <span class="quantum-game-card__tag">QAOA • Graph Coloring</span>
+        <h3>Quantum Map Colorer</h3>
+      </div>
+      <span class="quantum-game-card__badge" aria-label="Six regions">6 regions</span>
+    </div>
+
+    <p class="quantum-game-card__description">
+      Color a randomly generated map with only three colors so that neighboring regions never match.
+      Or let a 12-qubit QAOA statevector search the graph-coloring QUBO for a zero-energy assignment.
+    </p>
+
+    <div class="quantum-map__rulebar" aria-label="Map-coloring rules">
+      <span><strong>Goal</strong> adjacent regions ≠ same color</span>
+      <span class="quantum-map__rule-arrow">•</span>
+      <span><strong>Palette</strong> 3 colors</span>
+      <span class="quantum-map__rule-arrow">•</span>
+      <span><strong>Quantum</strong> QUBO → p=2 QAOA → 2048 shots</span>
+    </div>
+
+    <div class="quantum-map__workspace">
+      <section class="quantum-map__map-panel" aria-labelledby="quantum-map-board-title">
+        <div class="quantum-map__map-heading">
+          <div>
+            <span class="quantum-map__kicker">Click a region to cycle colors</span>
+            <h4 id="quantum-map-board-title">Procedural map</h4>
+          </div>
+          <div class="quantum-map__palette" aria-label="Three available colors">
+            <span class="quantum-map__swatch quantum-map__swatch--0" title="Color 1"></span>
+            <span class="quantum-map__swatch quantum-map__swatch--1" title="Color 2"></span>
+            <span class="quantum-map__swatch quantum-map__swatch--2" title="Color 3"></span>
+          </div>
+        </div>
+
+        <svg class="quantum-map__svg" data-map-svg viewBox="0 0 100 70" role="img"
+             aria-label="Interactive six-region map"></svg>
+
+        <div class="quantum-map__manual-summary">
+          <span>Colored <strong data-map-colored>0 / 6</strong></span>
+          <span>Conflicting borders <strong data-map-conflicts>0</strong></span>
+        </div>
+      </section>
+
+      <section class="quantum-map__quantum-panel" aria-label="Quantum solver metrics">
+        <div class="quantum-map__metric">
+          <span>Graph edges</span>
+          <strong data-map-edges>—</strong>
+        </div>
+        <div class="quantum-map__metric">
+          <span>Active qubits</span>
+          <strong data-map-qubits>12</strong>
+        </div>
+        <div class="quantum-map__metric">
+          <span>Exact ground energy</span>
+          <strong data-map-ground>—</strong>
+        </div>
+        <div class="quantum-map__metric">
+          <span>Best QAOA sample</span>
+          <strong data-map-qaoa-energy>—</strong>
+        </div>
+        <div class="quantum-map__metric">
+          <span>P(ground state)</span>
+          <strong data-map-ground-prob>—</strong>
+        </div>
+        <div class="quantum-map__metric">
+          <span>Optimized angles</span>
+          <strong data-map-angles>—</strong>
+        </div>
+
+        <p class="quantum-map__status" data-map-status aria-live="polite">
+          New map ready. Try coloring it yourself, or run QAOA.
+        </p>
+
+        <div class="quantum-map__samples" data-map-samples hidden>
+          <span class="quantum-map__samples-title">Most frequent quantum measurements</span>
+          <div data-map-sample-list></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="quantum-game-card__actions quantum-map__actions">
+      <button class="quantum-game-button quantum-game-button--secondary" type="button" data-map-generate>
+        New Map
+      </button>
+      <button class="quantum-game-button quantum-game-button--secondary" type="button" data-map-clear>
+        Clear Colors
+      </button>
+      <button class="quantum-game-button quantum-game-button--primary" type="button" data-map-solve>
+        Solve with QAOA
+      </button>
+    </div>
+
+    <p class="quantum-game-card__note">
+      Genuine browser-side QAOA simulation. The graph-coloring cost is emitted as an explicit QUBO with
+      exactly-one penalties per region and same-color penalties per shared border. Two adjacent regions are
+      symmetry-fixed internally, reducing 18 one-hot variables to 12 qubits; the displayed solution comes from
+      the best state actually sampled from the optimized QAOA statevector. Exact enumeration is used only as a reference.
+    </p>
+  </article>
+</template>
+
+<script src="{{ '/assets/js/quantum-map-colorer.js' | relative_url }}" defer></script>
