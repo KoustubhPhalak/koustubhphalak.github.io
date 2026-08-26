@@ -367,6 +367,7 @@
     let reduced = null;
     let colors = Array(REGION_COUNT).fill(null);
     let regionPaths = [];
+    let regionLabels = [];
     let edgeLines = [];
     let worker = null;
 
@@ -415,6 +416,14 @@
         const color = colors[region];
         if (color !== null) path.classList.add(`quantum-map__region--color-${color}`);
         if (invalidRegions.has(region)) path.classList.add("quantum-map__region--invalid");
+
+        path.setAttribute(
+          "aria-label",
+          `Region ${LABELS[region]}, ${color === null ? "uncolored" : `color ${color + 1}`}`
+        );
+        if (regionLabels[region]) {
+          regionLabels[region].classList.toggle("quantum-map__label--uncolored", color === null);
+        }
       });
       updateManualMetrics();
     }
@@ -422,6 +431,7 @@
     function buildSvg() {
       svg.replaceChildren();
       regionPaths = [];
+      regionLabels = [];
       edgeLines = [];
 
       // Region shapes first.
@@ -467,9 +477,10 @@
         const label = document.createElementNS(SVG_NS, "text");
         label.setAttribute("x", centroid.x.toFixed(3));
         label.setAttribute("y", centroid.y.toFixed(3));
-        label.setAttribute("class", "quantum-map__label");
+        label.setAttribute("class", "quantum-map__label quantum-map__label--uncolored");
         label.textContent = LABELS[region];
         svg.appendChild(label);
+        regionLabels.push(label);
       });
     }
 

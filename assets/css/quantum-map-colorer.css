@@ -83,12 +83,9 @@
   box-shadow: 0 0 0 1px rgba(54, 61, 71, 0.2);
 }
 
-.quantum-map__swatch--0,
-.quantum-map__region--color-0 { fill: #6f6bd8; background: #6f6bd8; }
-.quantum-map__swatch--1,
-.quantum-map__region--color-1 { fill: #42a98d; background: #42a98d; }
-.quantum-map__swatch--2,
-.quantum-map__region--color-2 { fill: #dc8b4d; background: #dc8b4d; }
+.quantum-map__swatch--0 { background: #6f6bd8; }
+.quantum-map__swatch--1 { background: #42a98d; }
+.quantum-map__swatch--2 { background: #dc8b4d; }
 
 .quantum-map__svg {
   display: block;
@@ -113,7 +110,16 @@
   filter: brightness(0.97);
 }
 
-.quantum-map__region--invalid {
+/*
+ * These rules intentionally come AFTER the neutral .quantum-map__region fill.
+ * The old stylesheet defined the color classes earlier with equal specificity,
+ * so the later neutral fill won the cascade and every region stayed gray.
+ */
+.quantum-map__region.quantum-map__region--color-0 { fill: #6f6bd8; }
+.quantum-map__region.quantum-map__region--color-1 { fill: #42a98d; }
+.quantum-map__region.quantum-map__region--color-2 { fill: #dc8b4d; }
+
+.quantum-map__region.quantum-map__region--invalid {
   fill: #d9dce4;
 }
 
@@ -135,17 +141,18 @@
   pointer-events: none;
   fill: #ffffff;
   paint-order: stroke;
-  stroke: rgba(35, 40, 48, 0.55);
-  stroke-width: 0.7;
+  stroke: rgba(35, 40, 48, 0.40);
+  stroke-width: 1.2px;
+  vector-effect: non-scaling-stroke;
   font-size: 5px;
-  font-weight: 900;
+  font-weight: 850;
   text-anchor: middle;
   dominant-baseline: central;
 }
 
-.quantum-map__region:not(.quantum-map__region--color-0):not(.quantum-map__region--color-1):not(.quantum-map__region--color-2) + .quantum-map__label {
-  fill: #444b55;
-  stroke: rgba(255, 255, 255, 0.85);
+.quantum-map__label--uncolored {
+  fill: #59616b;
+  stroke: rgba(255, 255, 255, 0.96);
 }
 
 .quantum-map__manual-summary {
